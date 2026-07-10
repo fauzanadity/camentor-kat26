@@ -171,8 +171,8 @@ footer{text-align:center; padding:30px 20px 10px; font-size:12.5px; color:var(--
     <div class="brand">
       <div class="brand-mark">KAT</div>
       <div class="brand-text">
-        <h1>Keperluan & Logistik Temple</h1>
-        <p>KAT ITB 2026 &middot; anti tabrakan logistik kelompok</p>
+        <h1>Keperluan Temple</h1>
+        <p>KAT ITB 2026 &middot; anti tabrakan keperluan kelompok</p>
       </div>
     </div>
     <div class="topbar-actions">
@@ -221,7 +221,7 @@ footer{text-align:center; padding:30px 20px 10px; font-size:12.5px; color:var(--
   </div>
 
   <div class="card section-gap">
-    <h2>Preview Semua Logistik Temple</h2>
+    <h2>Preview Semua Keperluan Temple</h2>
     <p class="subtitle">Hijau = sudah plot keperluan &middot; Merah = belum plot</p>
     <div class="table-wrap">
       <table>
@@ -386,7 +386,7 @@ document.getElementById('searchInput').addEventListener('input', renderTable);
 
 document.getElementById('whatsappBtn').addEventListener('click', () => {
   const total = getTotalTemple();
-  let lines = ['Halo semuanya! 👋✨', '', 'Berikut adalah daftar plot Keperluan & Logistik setiap Temple:', ''];
+  let lines = ['Halo semuanya! 👋✨', '', 'Berikut adalah daftar plot Keperluan  setiap Temple:', ''];
   for (let i = 1; i <= total; i++) {
     const entry = findEntry(i);
     lines.push(`Temple ${i}: ${entry && entry.keperluan ? entry.keperluan : '-'}`);
