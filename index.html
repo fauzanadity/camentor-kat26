@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dress Code Temple — KAT ITB 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ==========================================================================
+   DESIGN TOKENS
+   ========================================================================== */
+:root{
+  --red:#A31621;
+  --red-dark:#7A0F19;
+  --red-light:#C13B44;
+  --red-tint:#FBEAEA;
+  --bg:#F7F5F3;
+  --card-bg:#FFFFFF;
+  --border:#E7E1DD;
+  --text:#241010;
+  --text-muted:#7A6E6B;
+  --green:#1E8E5A;
+  --green-tint:#E6F5EE;
+  --danger:#D64545;
+  --danger-tint:#FDECEC;
+  --shadow:0 4px 24px rgba(163,22,33,.08);
+  --shadow-sm:0 2px 10px rgba(36,16,16,.06);
+  --radius-lg:20px;
+  --radius-md:14px;
+  --radius-sm:10px;
+  --font-display:'Poppins',system-ui,sans-serif;
+  --font-body:'Inter',system-ui,sans-serif;
+}
+[data-theme="dark"]{
+  --bg:#171111;
+  --card-bg:#221919;
+  --border:#382828;
+  --text:#F5EDEA;
+  --text-muted:#B8A8A5;
+  --red-tint:#3A1418;
+  --green-tint:#122A22;
+  --danger-tint:#3A1414;
+  --shadow:0 4px 24px rgba(0,0,0,.35);
+  --shadow-sm:0 2px 10px rgba(0,0,0,.25);
+}
+
+*{box-sizing:border-box; margin:0; padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:var(--font-body);
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  transition:background .3s ease, color .3s ease;
+  padding-bottom:60px;
+}
+:focus-visible{outline:3px solid var(--red-light); outline-offset:2px;}
+@media (prefers-reduced-motion: reduce){
+  *{animation-duration:.01ms !important; transition-duration:.01ms !important;}
+}
+
+/* ==========================================================================
+   HEADER
+   ========================================================================== */
+.topbar{
+  background:linear-gradient(120deg,var(--red) 0%,var(--red-dark) 100%);
+  color:#fff;
+  padding:22px 24px;
+  position:sticky; top:0; z-index:40;
+  box-shadow:0 2px 16px rgba(0,0,0,.15);
+}
+.topbar-inner{
+  max-width:960px; margin:0 auto;
+  display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;
+}
+.brand{display:flex; align-items:center; gap:12px;}
+.brand-mark{
+  width:44px; height:44px; border-radius:12px;
+  background:#fff;
+  display:flex; align-items:center; justify-content:center;
+  font-family:var(--font-display); font-weight:800; color:var(--red);
+  font-size:18px;
+  flex-shrink:0;
+}
+.brand-text h1{font-family:var(--font-display); font-size:18px; font-weight:700; line-height:1.2;}
+.brand-text p{font-size:12.5px; opacity:.85; font-weight:500;}
+.topbar-actions{display:flex; align-items:center; gap:8px;}
+.icon-btn{
+  width:40px; height:40px; border-radius:10px;
+  background:rgba(255,255,255,.15);
+  border:1px solid rgba(255,255,255,.25);
+  color:#fff; font-size:18px; cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  transition:background .2s ease, transform .15s ease;
+}
+.icon-btn:hover{background:rgba(255,255,255,.28); transform:translateY(-1px);}
+
+/* ==========================================================================
+   LAYOUT
+   ========================================================================== */
+.container{max-width:960px; margin:0 auto; padding:24px 20px 0;}
+.section-gap{margin-top:22px;}
+.card{
+  background:var(--card-bg);
+  border:1px solid var(--border);
+  border-radius:var(--radius-lg);
+  box-shadow:var(--shadow-sm);
+  padding:22px;
+  transition:background .3s ease, border-color .3s ease;
+}
+.card h2{font-family:var(--font-display); font-size:16px; font-weight:700; margin-bottom:4px;}
+.card .subtitle{font-size:13px; color:var(--text-muted); margin-bottom:16px;}
+
+/* ==========================================================================
+   STATS
+   ========================================================================== */
+.stats-grid{
+  display:grid; grid-template-columns:repeat(3,1fr); gap:14px;
+}
+.stat-card{
+  background:var(--card-bg);
+  border:1px solid var(--border);
+  border-radius:var(--radius-md);
+  padding:16px 18px;
+  box-shadow:var(--shadow-sm);
+  position:relative; overflow:hidden;
+}
+.stat-card::before{
+  content:''; position:absolute; left:0; top:0; bottom:0; width:4px;
+  background:var(--accent, var(--red));
+}
+.stat-card .num{font-family:var(--font-display); font-size:28px; font-weight:800;}
+.stat-card .label{font-size:12.5px; color:var(--text-muted); margin-top:2px; font-weight:600;}
+.stat-card.total{--accent:var(--red);}
+.stat-card.done{--accent:var(--green);}
+.stat-card.pending{--accent:var(--danger);}
+
+/* ==========================================================================
+   FORM
+   ========================================================================== */
+.form-grid{display:grid; grid-template-columns:140px 1fr; gap:14px; align-items:end;}
+.field{display:flex; flex-direction:column; gap:6px;}
+.field label{font-size:12.5px; font-weight:600; color:var(--text-muted);}
+.field input, .field select{
+  padding:11px 13px;
+  border-radius:var(--radius-sm);
+  border:1.5px solid var(--border);
+  background:var(--bg);
+  color:var(--text);
+  font-size:14.5px;
+  font-family:var(--font-body);
+  transition:border-color .2s ease, box-shadow .2s ease;
+}
+.field input:focus, .field select:focus{
+  border-color:var(--red-light);
+  box-shadow:0 0 0 3px var(--red-tint);
+  outline:none;
+}
+.form-actions{grid-column:1 / -1; display:flex; gap:10px; margin-top:4px; flex-wrap:wrap;}
+.btn{
+  border:none; cursor:pointer; font-family:var(--font-body); font-weight:600; font-size:14px;
+  padding:11px 20px; border-radius:var(--radius-sm);
+  transition:transform .15s ease, box-shadow .15s ease, background .2s ease;
+  display:inline-flex; align-items:center; gap:6px;
+}
+.btn:active{transform:scale(.97);}
+.btn-primary{background:var(--red); color:#fff; box-shadow:0 4px 14px rgba(163,22,33,.3);}
+.btn-primary:hover{background:var(--red-dark);}
+.btn-ghost{background:transparent; color:var(--text); border:1.5px solid var(--border);}
+.btn-ghost:hover{border-color:var(--red-light); color:var(--red);}
+.btn-sm{padding:7px 12px; font-size:12.5px; border-radius:8px;}
+.btn-danger{background:var(--danger); color:#fff;}
+.btn-danger:hover{background:#b83636;}
+.btn-outline-danger{background:transparent; border:1.5px solid var(--danger); color:var(--danger);}
+.btn-outline-danger:hover{background:var(--danger-tint);}
+.btn-whatsapp{background:#1E8E5A; color:#fff; box-shadow:0 4px 14px rgba(30,142,90,.3);}
+.btn-whatsapp:hover{background:#166E46;}
+
+/* ==========================================================================
+   TOOLBAR
+   ========================================================================== */
+.toolbar{
+  display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between;
+}
+.search-box{
+  flex:1; min-width:180px;
+  display:flex; align-items:center; gap:8px;
+  background:var(--bg); border:1.5px solid var(--border); border-radius:var(--radius-sm);
+  padding:9px 14px;
+}
+.search-box input{border:none; background:transparent; outline:none; color:var(--text); font-size:14px; width:100%; font-family:var(--font-body);}
+.toolbar-buttons{display:flex; gap:8px; flex-wrap:wrap;}
+
+/* ==========================================================================
+   TABLE
+   ========================================================================== */
+.table-wrap{overflow-x:auto; border-radius:var(--radius-md); border:1px solid var(--border);}
+table{width:100%; border-collapse:collapse; min-width:560px;}
+thead th{
+  text-align:left; font-size:12px; text-transform:uppercase; letter-spacing:.04em;
+  color:var(--text-muted); font-weight:700; padding:12px 16px;
+  background:var(--bg); border-bottom:1px solid var(--border); position:sticky; top:0;
+}
+tbody td{padding:13px 16px; font-size:14px; border-bottom:1px solid var(--border);}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr{transition:background .15s ease;}
+tbody tr:hover{background:var(--red-tint);}
+.status-pill{
+  display:inline-flex; align-items:center; gap:6px; padding:4px 10px; border-radius:999px;
+  font-size:12.5px; font-weight:700;
+}
+.status-pill.ok{background:var(--green-tint); color:var(--green);}
+.status-pill.no{background:var(--danger-tint); color:var(--danger);}
+.dot{width:8px; height:8px; border-radius:50%; background:currentColor; flex-shrink:0;}
+.row-actions{display:flex; gap:6px;}
+.dresscode-text{font-weight:600;}
+.empty-text{color:var(--text-muted); font-style:italic;}
+
+/* ==========================================================================
+   MODAL
+   ========================================================================== */
+.modal-overlay{
+  position:fixed; inset:0; background:rgba(20,10,10,.5);
+  display:flex; align-items:center; justify-content:center; z-index:100;
+  padding:20px; opacity:0; pointer-events:none; transition:opacity .2s ease;
+}
+.modal-overlay.active{opacity:1; pointer-events:auto;}
+.modal-box{
+  background:var(--card-bg); border-radius:var(--radius-lg); max-width:420px; width:100%;
+  padding:26px; box-shadow:0 20px 60px rgba(0,0,0,.3);
+  transform:translateY(14px) scale(.97); transition:transform .25s ease;
+  border:1px solid var(--border);
+}
+.modal-overlay.active .modal-box{transform:translateY(0) scale(1);}
+.modal-box.wide{max-width:560px;}
+.modal-icon{
+  width:48px; height:48px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+  font-size:22px; margin-bottom:14px;
+}
+.modal-icon.warn{background:var(--danger-tint); color:var(--danger);}
+.modal-icon.info{background:var(--red-tint); color:var(--red);}
+.modal-icon.success{background:var(--green-tint); color:var(--green);}
+.modal-box h3{font-family:var(--font-display); font-size:17px; margin-bottom:8px;}
+.modal-box p{font-size:14px; color:var(--text-muted); line-height:1.55; margin-bottom:18px;}
+.modal-box input{
+  width:100%; padding:10px 13px; border-radius:var(--radius-sm); border:1.5px solid var(--border);
+  background:var(--bg); color:var(--text); font-size:14px; margin-bottom:16px; font-family:var(--font-body);
+}
+.modal-box textarea{
+  width:100%; padding:12px 13px; border-radius:var(--radius-sm); border:1.5px solid var(--border);
+  background:var(--bg); color:var(--text); font-size:13.5px; margin-bottom:16px; font-family:var(--font-body);
+  resize:vertical; min-height:220px; line-height:1.6;
+}
+.modal-actions{display:flex; gap:10px; justify-content:flex-end;}
+
+/* Toast */
+#toastHost{position:fixed; bottom:20px; right:20px; z-index:150; display:flex; flex-direction:column; gap:10px;}
+.toast{
+  background:var(--card-bg); border:1px solid var(--border); border-left:4px solid var(--green);
+  padding:12px 16px; border-radius:var(--radius-sm); box-shadow:var(--shadow); font-size:13.5px;
+  min-width:220px; animation:slideIn .3s ease;
+}
+.toast.err{border-left-color:var(--danger);}
+@keyframes slideIn{from{opacity:0; transform:translateX(20px);} to{opacity:1; transform:translateX(0);}}
+
+footer{text-align:center; padding:30px 20px 10px; font-size:12.5px; color:var(--text-muted);}
+
+@media (max-width:600px){
+  .form-grid{grid-template-columns:1fr;}
+  .stats-grid{grid-template-columns:1fr; }
+  .brand-text p{display:none;}
+}
+</style>
+</head>
+<body>
+
+<!-- ============================== HEADER ============================== -->
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <div class="brand-mark">KAT</div>
+      <div class="brand-text">
+        <h1>Dress Code Temple</h1>
+        <p>KAT ITB 2026 &middot; anti tabrakan dress code</p>
+      </div>
+    </div>
+    <div class="topbar-actions">
+      <button class="icon-btn" id="settingsBtn" title="Pengaturan jumlah Temple">⚙️</button>
+      <button class="icon-btn" id="darkModeBtn" title="Ganti tema">🌙</button>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- ============================== STATS ============================== -->
+  <div class="stats-grid" id="statsGrid">
+    <div class="stat-card total">
+      <div class="num" id="statTotal">0</div>
+      <div class="label">Total Temple</div>
+    </div>
+    <div class="stat-card done">
+      <div class="num" id="statDone">0</div>
+      <div class="label">Sudah Memilih</div>
+    </div>
+    <div class="stat-card pending">
+      <div class="num" id="statPending">0</div>
+      <div class="label">Belum Memilih</div>
+    </div>
+  </div>
+
+  <!-- ============================== FORM ============================== -->
+  <div class="card section-gap">
+    <h2 id="formTitle">Isi / Ubah Dress Code</h2>
+    <p class="subtitle">Dress code akan otomatis dicek supaya tidak sama dengan Temple lain.</p>
+    <form id="dressForm">
+      <div class="form-grid">
+        <div class="field">
+          <label for="inputTemple">Nomor Temple</label>
+          <input type="number" id="inputTemple" min="1" placeholder="7" required>
+        </div>
+        <div class="field">
+          <label for="inputDress">Dress Code</label>
+          <input type="text" id="inputDress" placeholder="Contoh: Flanel Hitam" required>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary" id="submitBtn">✅ Simpan Dress Code</button>
+          <button type="button" class="btn btn-ghost" id="cancelEditBtn" style="display:none;">Batal Edit</button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <!-- ============================== TOOLBAR ============================== -->
+  <div class="card section-gap">
+    <div class="toolbar">
+      <div class="search-box">
+        <span>🔍</span>
+        <input type="text" id="searchInput" placeholder="Cari nomor Temple atau dress code...">
+      </div>
+      <div class="toolbar-buttons">
+        <button class="btn btn-whatsapp btn-sm" id="whatsappBtn">💬 Copy untuk Broadcast WhatsApp</button>
+        <button class="btn btn-outline-danger btn-sm" id="resetAllBtn">🗑️ Reset Semua Data</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================== TABLE ============================== -->
+  <div class="card section-gap">
+    <h2>Preview Semua Temple</h2>
+    <p class="subtitle">Hijau = sudah memilih dress code &middot; Merah = belum memilih</p>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Temple</th>
+            <th>Dress Code</th>
+            <th>Status</th>
+            <th>Aksi</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <footer>Dibuat untuk Calon Mentor KAT ITB 2026 &middot; Data tersimpan lokal di browser ini (localStorage)</footer>
+</div>
+
+<!-- ============================== MODALS ============================== -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal-box" id="modalBox">
+    <div class="modal-icon" id="modalIcon">ℹ️</div>
+    <h3 id="modalTitle">Judul</h3>
+    <p id="modalMessage">Pesan</p>
+    <div id="modalExtra"></div>
+    <div class="modal-actions" id="modalActions"></div>
+  </div>
+</div>
+
+<div id="toastHost"></div>
+
+<script>
+/* ==========================================================================
+   KONSTANTA & STATE
+   ========================================================================== */
+const STORAGE_KEY = 'kat_dresscode_data';       // array data dress code per temple
+const TOTAL_KEY = 'kat_total_temple';           // jumlah total temple yang ditampilkan
+const THEME_KEY = 'kat_theme';                  // 'light' | 'dark'
+const RESET_TOKEN = 'macanTutulUhuyanjay';      // token untuk reset semua data
+
+let editingTemple = null; // menyimpan nomor temple yang sedang diedit (null = mode tambah baru)
+
+/* ==========================================================================
+   NORMALISASI DRESS CODE
+   Tujuan: dua tulisan yang berbeda tapi maknanya sama dianggap identik.
+   Mudah dikembangkan: tinggal tambah entri di STOPWORDS atau SYNONYMS.
+   ========================================================================== */
+
+// Kata-kata umum yang tidak membedakan dress code, akan dibuang
+const STOPWORDS = new Set([
+  'baju','kaos','kemeja','hem','warna','pakaian',
+  'atasan','bawahan','pakai','memakai','celana','model','jenis','dress','code'
+]);
+
+// Kamus sinonim: kata di kiri akan diubah menjadi kata di kanan.
+// Tambahkan entri baru di sini kapan saja tanpa mengubah logika lain.
+const SYNONYMS = {
+  'flannel':'flanel',
+  'grey':'abu',
+  'gray':'abu',
+  'abuabu':'abu',
+  'shirt':'kemeja',
+  'white':'putih',
+  'black':'hitam',
+  'blue':'biru',
+  'navy':'navy',
+  'dongker':'navy',
+  'red':'merah',
+  'green':'hijau',
+  'yellow':'kuning',
+  'brown':'coklat',
+  'cokelat':'coklat',
+  'jeans':'denim',
+  'sneakers':'sepatu',
+  'sneaker':'sepatu',
+};
+
+/**
+ * normalizeDressCode(text)
+ * Mengubah teks dress code bebas menjadi bentuk kanonik untuk dibandingkan.
+ * Langkah: lowercase -> hapus tanda baca -> tokenisasi -> mapping sinonim
+ * -> buang stopword -> hapus duplikat -> urutkan -> gabung.
+ */
+function normalizeDressCode(text) {
+  if (!text) return '';
+  let s = text.toLowerCase();
+  s = s.replace(/[^a-z0-9\s]/g, ' ');        // hapus tanda baca, ubah jadi spasi
+  let tokens = s.split(/\s+/).filter(Boolean);
+
+  tokens = tokens.map(tok => SYNONYMS[tok] || tok);   // mapping sinonim
+  tokens = tokens.filter(tok => !STOPWORDS.has(tok));  // buang kata umum
+
+  const uniqueTokens = Array.from(new Set(tokens));    // buang duplikat (mis. "abu abu")
+  uniqueTokens.sort();                                  // urutan kata tidak berpengaruh
+
+  return uniqueTokens.join(' ');
+}
+
+/* ==========================================================================
+   PENYIMPANAN DATA (localStorage)
+   ========================================================================== */
+function loadData() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch (e) {
+    console.error('Gagal membaca data:', e);
+    return [];
+  }
+}
+
+function saveData(data) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+}
+
+function getTotalTemple() {
+  const v = parseInt(localStorage.getItem(TOTAL_KEY), 10);
+  return Number.isFinite(v) && v > 0 ? v : 16; // default 30 temple
+}
+
+function setTotalTemple(n) {
+  localStorage.setItem(TOTAL_KEY, String(n));
+}
+
+/* ==========================================================================
+   HELPER: cari entri berdasarkan nomor temple
+   ========================================================================== */
+function findEntry(data, templeNumber) {
+  return data.find(d => d.temple === templeNumber);
+}
+
+// Cek apakah normalized dress code sudah dipakai temple lain (selain excludeTemple)
+function findConflict(data, normalized, excludeTemple) {
+  if (!normalized) return null;
+  return data.find(d => d.normalized === normalized && d.temple !== excludeTemple);
+}
+
+/* ==========================================================================
+   RENDER: STATISTIK
+   ========================================================================== */
+function renderStats(data) {
+  const total = getTotalTemple();
+  const done = data.filter(d => d.dresscode && d.dresscode.trim() !== '').length;
+  document.getElementById('statTotal').textContent = total;
+  document.getElementById('statDone').textContent = done;
+  document.getElementById('statPending').textContent = Math.max(total - done, 0);
+}
+
+/* ==========================================================================
+   RENDER: TABEL PREVIEW
+   ========================================================================== */
+function renderTable() {
+  const data = loadData();
+  const total = getTotalTemple();
+  const searchTerm = document.getElementById('searchInput').value.trim().toLowerCase();
+  const tbody = document.getElementById('tableBody');
+  tbody.innerHTML = '';
+
+  for (let i = 1; i <= total; i++) {
+    const entry = findEntry(data, i);
+    const hasDress = entry && entry.dresscode && entry.dresscode.trim() !== '';
+
+    // filter pencarian: cocokkan nomor temple atau isi dress code
+    if (searchTerm) {
+      const matchTemple = String(i).includes(searchTerm);
+      const matchDress = hasDress && entry.dresscode.toLowerCase().includes(searchTerm);
+      if (!matchTemple && !matchDress) continue;
+    }
+
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><strong>${i}</strong></td>
+      <td>${hasDress ? `<span class="dresscode-text">${escapeHtml(entry.dresscode)}</span>` : `<span class="empty-text">Belum memilih</span>`}</td>
+      <td>${hasDress
+          ? `<span class="status-pill ok"><span class="dot"></span>Sudah</span>`
+          : `<span class="status-pill no"><span class="dot"></span>Belum</span>`}</td>
+      <td>
+        <div class="row-actions">
+          <button class="btn btn-ghost btn-sm" onclick="startEdit(${i})">✏️ Edit</button>
+          ${hasDress ? `<button class="btn btn-outline-danger btn-sm" onclick="confirmDelete(${i})">🗑️</button>` : ''}
+        </div>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  }
+
+  renderStats(data);
+}
+
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+/* ==========================================================================
+   FORM: SUBMIT (TAMBAH / EDIT)
+   ========================================================================== */
+document.getElementById('dressForm').addEventListener('submit', function (e) {
+  e.preventDefault();
+
+  const templeInput = document.getElementById('inputTemple');
+  const dressInput = document.getElementById('inputDress');
+
+  const temple = parseInt(templeInput.value, 10);
+  const dresscode = dressInput.value.trim();
+
+  if (!Number.isFinite(temple) || temple < 1) {
+    showModal('warn', 'Nomor Temple Tidak Valid', 'Mohon isi nomor Temple dengan angka yang benar.');
+    return;
+  }
+  if (!dresscode) {
+    showModal('warn', 'Dress Code Kosong', 'Mohon isi dress code terlebih dahulu.');
+    return;
+  }
+
+  const normalized = normalizeDressCode(dresscode);
+  if (!normalized) {
+    showModal('warn', 'Dress Code Kurang Spesifik', 'Dress code yang kamu tulis terlalu umum setelah dinormalisasi. Coba tulis lebih spesifik, misalnya "Flanel Hitam".');
+    return;
+  }
+
+  const data = loadData();
+
+  // cek bentrok dengan temple lain (first come first serve: entri yang sudah ada duluan menang)
+  const conflict = findConflict(data, normalized, temple);
+  if (conflict) {
+    showModal('warn', 'Dress Code Sudah Digunakan', `Dress code tersebut sudah digunakan oleh Temple ${conflict.temple}. Silakan pilih dress code lain.`);
+    return;
+  }
+
+  const existing = findEntry(data, temple);
+  if (existing) {
+    existing.dresscode = dresscode;
+    existing.normalized = normalized;
+    existing.timestamp = Date.now();
+  } else {
+    data.push({ temple, dresscode, normalized, timestamp: Date.now() });
+  }
+
+  saveData(data);
+  renderTable();
+  showToast(existing ? `Dress code Temple ${temple} berhasil diperbarui.` : `Dress code Temple ${temple} berhasil disimpan.`);
+  resetForm();
+});
+
+function resetForm() {
+  editingTemple = null;
+  document.getElementById('dressForm').reset();
+  document.getElementById('formTitle').textContent = 'Isi / Ubah Dress Code';
+  document.getElementById('submitBtn').textContent = '✅ Simpan Dress Code';
+  document.getElementById('cancelEditBtn').style.display = 'none';
+  document.getElementById('inputTemple').disabled = false;
+}
+
+document.getElementById('cancelEditBtn').addEventListener('click', resetForm);
+
+/* ==========================================================================
+   EDIT & HAPUS
+   ========================================================================== */
+function startEdit(temple) {
+  const data = loadData();
+  const entry = findEntry(data, temple);
+
+  editingTemple = temple;
+  document.getElementById('inputTemple').value = temple;
+  document.getElementById('inputTemple').disabled = true; // nomor temple tidak boleh diubah saat edit
+  document.getElementById('inputDress').value = entry ? entry.dresscode : '';
+  document.getElementById('formTitle').textContent = `Ubah Dress Code Temple ${temple}`;
+  document.getElementById('submitBtn').textContent = '💾 Update Dress Code';
+  document.getElementById('cancelEditBtn').style.display = 'inline-flex';
+  document.getElementById('inputDress').focus();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function confirmDelete(temple) {
+  showConfirm(
+    'Hapus Dress Code?',
+    `Dress code Temple ${temple} akan dihapus dan statusnya kembali menjadi "Belum memilih". Lanjutkan?`,
+    () => {
+      const data = loadData().filter(d => d.temple !== temple);
+      saveData(data);
+      renderTable();
+      showToast(`Dress code Temple ${temple} dihapus.`, true);
+    }
+  );
+}
+
+/* ==========================================================================
+   PENCARIAN
+   ========================================================================== */
+document.getElementById('searchInput').addEventListener('input', renderTable);
+
+/* ==========================================================================
+   COPY UNTUK BROADCAST WHATSAPP
+   Menyusun teks broadcast berisi daftar dress code semua Temple,
+   lalu menyalinnya ke clipboard supaya tinggal tempel di WhatsApp.
+   ========================================================================== */
+function buildWhatsappText() {
+  const data = loadData();
+  const total = getTotalTemple();
+
+  let lines = [];
+  lines.push('Halo semuanya! 👋✨');
+   lines.push('');
+  lines.push('Biar kompak dan nggak salah kostum, yuk catat Dresscode setiap Temple kita untuk:');
+  lines.push('📅 Day: [Isi di sini, misal: 1 / 2 / 3]');
+  lines.push('🗓️ Hari: [Isi di sini, misal: Senin / Selasa]');
+  lines.push('📆 Tanggal: [Isi di sini, misal: 10 Juli 2026]');
+   lines.push('');
+  lines.push('Berikut adalah daftarnya:');
+  lines.push('');
+
+  for (let i = 1; i <= total; i++) {
+    const entry = findEntry(data, i);
+    const hasDress = entry && entry.dresscode && entry.dresscode.trim() !== '';
+    lines.push(`Temple ${i}: ${hasDress ? entry.dresscode : '-'}`);
+  }
+
+  return lines.join('\n');
+}
+
+function copyWhatsappText() {
+  const text = buildWhatsappText();
+
+  const finishSuccess = () => {
+    showToast('Teks broadcast berhasil disalin! Tinggal tempel di WhatsApp.');
+  };
+
+  const showFallbackModal = () => {
+    showModal(
+      'info',
+      'Copy untuk Broadcast WhatsApp',
+      'Salin otomatis tidak tersedia di browser ini. Silakan salin teks di bawah secara manual.',
+      { withTextarea: true, textareaValue: text }
+    );
+  };
+
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(text).then(finishSuccess).catch(showFallbackModal);
+  } else {
+    // Fallback untuk browser/lingkungan lama
+    try {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.focus();
+      ta.select();
+      const ok = document.execCommand('copy');
+      document.body.removeChild(ta);
+      if (ok) finishSuccess(); else showFallbackModal();
+    } catch (e) {
+      showFallbackModal();
+    }
+  }
+}
+document.getElementById('whatsappBtn').addEventListener('click', copyWhatsappText);
+
+/* ==========================================================================
+   RESET SEMUA DATA (butuh token)
+   ========================================================================== */
+document.getElementById('resetAllBtn').addEventListener('click', function () {
+  showModal(
+    'warn',
+    'Reset Semua Data',
+    'Tindakan ini akan menghapus SEMUA dress code yang sudah diisi. Masukkan token untuk melanjutkan.',
+    { withInput: true, inputPlaceholder: 'Masukkan token...' },
+    (inputValue) => {
+      if (inputValue === RESET_TOKEN) {
+        localStorage.removeItem(STORAGE_KEY);
+        renderTable();
+        closeModal();
+        showToast('Semua data berhasil direset.', true);
+      } else {
+        showModal('warn', 'Token Salah', 'Token yang kamu masukkan tidak sesuai. Reset dibatalkan.');
+      }
+    }
+  );
+});
+
+/* ==========================================================================
+   PENGATURAN JUMLAH TEMPOL
+   ========================================================================== */
+document.getElementById('settingsBtn').addEventListener('click', function () {
+  showModal(
+    'info',
+    'Pengaturan Jumlah Temple',
+    'Atur berapa banyak Temple yang akan ditampilkan pada tabel preview.',
+    { withInput: true, inputType: 'number', inputPlaceholder: 'Contoh: 30', inputValue: getTotalTemple() },
+    (inputValue) => {
+      const n = parseInt(inputValue, 10);
+      if (Number.isFinite(n) && n > 0) {
+        setTotalTemple(n);
+        renderTable();
+        closeModal();
+        showToast(`Jumlah Temple diatur menjadi ${n}.`);
+      } else {
+        showModal('warn', 'Nilai Tidak Valid', 'Mohon masukkan angka yang valid dan lebih dari 0.');
+      }
+    }
+  );
+});
+
+/* ==========================================================================
+   DARK MODE
+   ========================================================================== */
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  document.getElementById('darkModeBtn').textContent = theme === 'dark' ? '☀️' : '🌙';
+  localStorage.setItem(THEME_KEY, theme);
+}
+document.getElementById('darkModeBtn').addEventListener('click', function () {
+  const current = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+  applyTheme(current === 'dark' ? 'light' : 'dark');
+});
+
+/* ==========================================================================
+   MODAL & KONFIRMASI (generik, bisa dipakai ulang)
+   ========================================================================== */
+let modalConfirmCallback = null;
+
+function showModal(type, title, message, options = {}, onSubmit = null) {
+  const overlay = document.getElementById('modalOverlay');
+  const box = document.getElementById('modalBox');
+  const icon = document.getElementById('modalIcon');
+  const iconMap = { warn: '⚠️', info: 'ℹ️', success: '✅' };
+
+  icon.className = 'modal-icon ' + type;
+  icon.textContent = iconMap[type] || 'ℹ️';
+  document.getElementById('modalTitle').textContent = title;
+  document.getElementById('modalMessage').textContent = message;
+
+  box.classList.toggle('wide', !!options.withTextarea);
+
+  const extra = document.getElementById('modalExtra');
+  extra.innerHTML = '';
+  let inputEl = null;
+  if (options.withInput) {
+    inputEl = document.createElement('input');
+    inputEl.type = options.inputType || 'text';
+    inputEl.placeholder = options.inputPlaceholder || '';
+    if (options.inputValue !== undefined) inputEl.value = options.inputValue;
+    extra.appendChild(inputEl);
+  }
+  let textareaEl = null;
+  if (options.withTextarea) {
+    textareaEl = document.createElement('textarea');
+    textareaEl.readOnly = true;
+    textareaEl.value = options.textareaValue || '';
+    extra.appendChild(textareaEl);
+  }
+
+  const actions = document.getElementById('modalActions');
+  actions.innerHTML = '';
+
+  const closeBtn = document.createElement('button');
+  closeBtn.className = 'btn btn-ghost btn-sm';
+  closeBtn.textContent = onSubmit ? 'Batal' : 'Tutup';
+  closeBtn.onclick = closeModal;
+  actions.appendChild(closeBtn);
+
+  if (textareaEl) {
+    const selectBtn = document.createElement('button');
+    selectBtn.className = 'btn btn-primary btn-sm';
+    selectBtn.textContent = '📋 Pilih Semua Teks';
+    selectBtn.onclick = () => { textareaEl.focus(); textareaEl.select(); };
+    actions.appendChild(selectBtn);
+  }
+
+  if (onSubmit) {
+    const okBtn = document.createElement('button');
+    okBtn.className = 'btn btn-primary btn-sm';
+    okBtn.textContent = 'Lanjutkan';
+    okBtn.onclick = () => onSubmit(inputEl ? inputEl.value.trim() : null);
+    actions.appendChild(okBtn);
+  }
+
+  overlay.classList.add('active');
+  if (inputEl) setTimeout(() => inputEl.focus(), 100);
+  if (textareaEl) setTimeout(() => { textareaEl.focus(); textareaEl.select(); }, 100);
+}
+
+function showConfirm(title, message, onConfirm) {
+  showModal('warn', title, message, {}, () => {
+    onConfirm();
+    closeModal();
+  });
+}
+
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('active');
+}
+
+document.getElementById('modalOverlay').addEventListener('click', function (e) {
+  if (e.target === this) closeModal();
+});
+document.addEventListener('keydown', function (e) {
+  if (e.key === 'Escape') closeModal();
+});
+
+/* ==========================================================================
+   TOAST NOTIFIKASI
+   ========================================================================== */
+function showToast(message, isDanger = false) {
+  const host = document.getElementById('toastHost');
+  const toast = document.createElement('div');
+  toast.className = 'toast' + (isDanger ? ' err' : '');
+  toast.textContent = message;
+  host.appendChild(toast);
+  setTimeout(() => {
+    toast.style.opacity = '0';
+    toast.style.transition = 'opacity .3s ease';
+    setTimeout(() => toast.remove(), 300);
+  }, 2800);
+}
+
+/* ==========================================================================
+   INISIALISASI
+   ========================================================================== */
+(function init() {
+  const savedTheme = localStorage.getItem(THEME_KEY) || 'light';
+  applyTheme(savedTheme);
+  renderTable();
+})();
+</script>
+</body>
+</html>
