@@ -382,138 +382,107 @@ footer{text-align:center; padding:30px 20px 10px; font-size:12.5px; color:var(--
 
 <div id="toastHost"></div>
 
-<script>
-/* ==========================================================================
-   KONSTANTA & STATE
-   ========================================================================== */
-const STORAGE_KEY = 'kat_dresscode_data';       // array data dress code per temple
-const TOTAL_KEY = 'kat_total_temple';           // jumlah total temple yang ditampilkan
-const THEME_KEY = 'kat_theme';                  // 'light' | 'dark'
-const RESET_TOKEN = 'macanTutulUhuyanjay';      // token untuk reset semua data
+<script type="module">
+// ==========================================================================
+// IMPORT FIREBASE SDK (Modular CDN)
+// ==========================================================================
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import { getDatabase, ref, set, onValue, get, child } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-let editingTemple = null; // menyimpan nomor temple yang sedang diedit (null = mode tambah baru)
+// !!! GANTI DENGAN FIREBASE CONFIG MILIKMU DARI LANGKAH 1 !!!
+const firebaseConfig = {
+  apiKey: "AIzaSyBzZqFz1RHRcLaotCaPK0NZn6utt6p9dHg",
+  authDomain: "kat-dresscode-26.firebaseapp.com",
+  databaseURL: "https://kat-dresscode-26-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "kat-dresscode-26",
+  storageBucket: "kat-dresscode-26.firebasestorage.app",
+  messagingSenderId: "787595044484",
+  appId: "1:787595044484:web:c68169081c07643b6b04d1",
+};
 
-/* ==========================================================================
-   NORMALISASI DRESS CODE
-   Tujuan: dua tulisan yang berbeda tapi maknanya sama dianggap identik.
-   Mudah dikembangkan: tinggal tambah entri di STOPWORDS atau SYNONYMS.
-   ========================================================================== */
+// Inisialisasi Firebase
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+const dbRef = ref(db, 'dresscode_data');
 
-// Kata-kata umum yang tidak membedakan dress code, akan dibuang
+// ==========================================================================
+// STATE & KONSTANTA LOCAL
+// ==========================================================================
+const TOTAL_KEY = 'kat_total_temple';
+const THEME_KEY = 'kat_theme';
+const RESET_TOKEN = 'macanTutulUhuyanjay';
+
+let globalData = []; // Menyimpan data dari Firebase secara lokal di memori jalannya aplikasi
+let editingTemple = null;
+
 const STOPWORDS = new Set([
   'baju','kaos','kemeja','hem','warna','pakaian',
   'atasan','bawahan','pakai','memakai','celana','model','jenis','dress','code'
 ]);
 
-// Kamus sinonim: kata di kiri akan diubah menjadi kata di kanan.
-// Tambahkan entri baru di sini kapan saja tanpa mengubah logika lain.
 const SYNONYMS = {
-  'flannel':'flanel',
-  'grey':'abu',
-  'gray':'abu',
-  'abuabu':'abu',
-  'shirt':'kemeja',
-  'white':'putih',
-  'black':'hitam',
-  'blue':'biru',
-  'navy':'navy',
-  'dongker':'navy',
-  'red':'merah',
-  'green':'hijau',
-  'yellow':'kuning',
-  'brown':'coklat',
-  'cokelat':'coklat',
-  'jeans':'denim',
-  'sneakers':'sepatu',
-  'sneaker':'sepatu',
+  'flannel':'flanel', 'grey':'abu', 'gray':'abu', 'abuabu':'abu', 'shirt':'kemeja',
+  'white':'putih', 'black':'hitam', 'blue':'biru', 'navy':'navy', 'dongker':'navy',
+  'red':'merah', 'green':'hijau', 'yellow':'kuning', 'brown':'coklat', 'cokelat':'coklat',
+  'jeans':'denim', 'sneakers':'sepatu', 'sneaker':'sepatu'
 };
 
-/**
- * normalizeDressCode(text)
- * Mengubah teks dress code bebas menjadi bentuk kanonik untuk dibandingkan.
- * Langkah: lowercase -> hapus tanda baca -> tokenisasi -> mapping sinonim
- * -> buang stopword -> hapus duplikat -> urutkan -> gabung.
- */
 function normalizeDressCode(text) {
   if (!text) return '';
-  let s = text.toLowerCase();
-  s = s.replace(/[^a-z0-9\s]/g, ' ');        // hapus tanda baca, ubah jadi spasi
-  let tokens = s.split(/\s+/).filter(Boolean);
-
-  tokens = tokens.map(tok => SYNONYMS[tok] || tok);   // mapping sinonim
-  tokens = tokens.filter(tok => !STOPWORDS.has(tok));  // buang kata umum
-
-  const uniqueTokens = Array.from(new Set(tokens));    // buang duplikat (mis. "abu abu")
-  uniqueTokens.sort();                                  // urutan kata tidak berpengaruh
-
+  let s = text.toLowerCase().replace(/[^a-z0-9\s]/g, ' ');
+  let tokens = s.split(/\s+/).filter(Boolean).map(tok => SYNONYMS[tok] || tok).filter(tok => !STOPWORDS.has(tok));
+  const uniqueTokens = Array.from(new Set(tokens)).sort();
   return uniqueTokens.join(' ');
-}
-
-/* ==========================================================================
-   PENYIMPANAN DATA (localStorage)
-   ========================================================================== */
-function loadData() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? JSON.parse(raw) : [];
-  } catch (e) {
-    console.error('Gagal membaca data:', e);
-    return [];
-  }
-}
-
-function saveData(data) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 }
 
 function getTotalTemple() {
   const v = parseInt(localStorage.getItem(TOTAL_KEY), 10);
-  return Number.isFinite(v) && v > 0 ? v : 16; // default 30 temple
+  return Number.isFinite(v) && v > 0 ? v : 16;
 }
+function setTotalTemple(n) { localStorage.setItem(TOTAL_KEY, String(n)); }
 
-function setTotalTemple(n) {
-  localStorage.setItem(TOTAL_KEY, String(n));
-}
-
-/* ==========================================================================
-   HELPER: cari entri berdasarkan nomor temple
-   ========================================================================== */
-function findEntry(data, templeNumber) {
-  return data.find(d => d.temple === templeNumber);
-}
-
-// Cek apakah normalized dress code sudah dipakai temple lain (selain excludeTemple)
-function findConflict(data, normalized, excludeTemple) {
+function findEntry(templeNumber) { return globalData.find(d => d.temple === templeNumber); }
+function findConflict(normalized, excludeTemple) {
   if (!normalized) return null;
-  return data.find(d => d.normalized === normalized && d.temple !== excludeTemple);
+  return globalData.find(d => d.normalized === normalized && d.temple !== excludeTemple);
 }
 
-/* ==========================================================================
-   RENDER: STATISTIK
-   ========================================================================== */
-function renderStats(data) {
+// ==========================================================================
+// SYNC REALTIME DENGAN FIREBASE
+// ==========================================================================
+// Fungsi ini otomatis berjalan setiap kali ada perubahan data di Firebase (oleh HP manapun)
+onValue(dbRef, (snapshot) => {
+  const data = snapshot.val();
+  if (data) {
+    // Firebase mengembalikan object atau array, kita normalisasi menjadi array standar
+    globalData = Object.keys(data).map(key => data[key]);
+  } else {
+    globalData = [];
+  }
+  renderTable(); // Update tabel secara otomatis di layar
+});
+
+// ==========================================================================
+// RENDER UI
+// ==========================================================================
+function renderStats() {
   const total = getTotalTemple();
-  const done = data.filter(d => d.dresscode && d.dresscode.trim() !== '').length;
+  const done = globalData.filter(d => d.dresscode && d.dresscode.trim() !== '').length;
   document.getElementById('statTotal').textContent = total;
   document.getElementById('statDone').textContent = done;
   document.getElementById('statPending').textContent = Math.max(total - done, 0);
 }
 
-/* ==========================================================================
-   RENDER: TABEL PREVIEW
-   ========================================================================== */
 function renderTable() {
-  const data = loadData();
   const total = getTotalTemple();
   const searchTerm = document.getElementById('searchInput').value.trim().toLowerCase();
   const tbody = document.getElementById('tableBody');
   tbody.innerHTML = '';
 
   for (let i = 1; i <= total; i++) {
-    const entry = findEntry(data, i);
+    const entry = findEntry(i);
     const hasDress = entry && entry.dresscode && entry.dresscode.trim() !== '';
 
-    // filter pencarian: cocokkan nomor temple atau isi dress code
     if (searchTerm) {
       const matchTemple = String(i).includes(searchTerm);
       const matchDress = hasDress && entry.dresscode.toLowerCase().includes(searchTerm);
@@ -524,20 +493,23 @@ function renderTable() {
     tr.innerHTML = `
       <td><strong>${i}</strong></td>
       <td>${hasDress ? `<span class="dresscode-text">${escapeHtml(entry.dresscode)}</span>` : `<span class="empty-text">Belum memilih</span>`}</td>
-      <td>${hasDress
-          ? `<span class="status-pill ok"><span class="dot"></span>Sudah</span>`
-          : `<span class="status-pill no"><span class="dot"></span>Belum</span>`}</td>
+      <td>${hasDress ? `<span class="status-pill ok"><span class="dot"></span>Sudah</span>` : `<span class="status-pill no"><span class="dot"></span>Belum</span>`}</td>
       <td>
         <div class="row-actions">
-          <button class="btn btn-ghost btn-sm" onclick="startEdit(${i})">✏️ Edit</button>
-          ${hasDress ? `<button class="btn btn-outline-danger btn-sm" onclick="confirmDelete(${i})">🗑️</button>` : ''}
+          <button class="btn btn-ghost btn-sm" id="edit-btn-${i}">✏️ Edit</button>
+          ${hasDress ? `<button class="btn btn-outline-danger btn-sm" id="del-btn-${i}">🗑️</button>` : ''}
         </div>
       </td>
     `;
     tbody.appendChild(tr);
-  }
 
-  renderStats(data);
+    // Pasang event listener secara dinamis
+    document.getElementById(`edit-btn-${i}`).addEventListener('click', () => startEdit(i));
+    if (hasDress) {
+      document.getElementById(`del-btn-${i}`).addEventListener('click', () => confirmDelete(i));
+    }
+  }
+  renderStats();
 }
 
 function escapeHtml(str) {
@@ -546,55 +518,47 @@ function escapeHtml(str) {
   return div.innerHTML;
 }
 
-/* ==========================================================================
-   FORM: SUBMIT (TAMBAH / EDIT)
-   ========================================================================== */
+// ==========================================================================
+// LOGIKA FORM & BUTTONS
+// ==========================================================================
 document.getElementById('dressForm').addEventListener('submit', function (e) {
   e.preventDefault();
-
-  const templeInput = document.getElementById('inputTemple');
-  const dressInput = document.getElementById('inputDress');
-
-  const temple = parseInt(templeInput.value, 10);
-  const dresscode = dressInput.value.trim();
+  const temple = parseInt(document.getElementById('inputTemple').value, 10);
+  const dresscode = document.getElementById('inputDress').value.trim();
 
   if (!Number.isFinite(temple) || temple < 1) {
     showModal('warn', 'Nomor Temple Tidak Valid', 'Mohon isi nomor Temple dengan angka yang benar.');
     return;
   }
   if (!dresscode) {
-    showModal('warn', 'Dress Code Kosong', 'Mohon isi dress code terlebih dahulu.');
-    return;
+     showModal('warn', 'Dress Code Kosong', 'Mohon isi dress code terlebih dahulu.');
+     return;
   }
 
   const normalized = normalizeDressCode(dresscode);
   if (!normalized) {
-    showModal('warn', 'Dress Code Kurang Spesifik', 'Dress code yang kamu tulis terlalu umum setelah dinormalisasi. Coba tulis lebih spesifik, misalnya "Flanel Hitam".');
+    showModal('warn', 'Dress Code Kurang Spesifik', 'Coba tulis lebih spesifik, misalnya "Flanel Hitam".');
     return;
   }
 
-  const data = loadData();
-
-  // cek bentrok dengan temple lain (first come first serve: entri yang sudah ada duluan menang)
-  const conflict = findConflict(data, normalized, temple);
+  const conflict = findConflict(normalized, temple);
   if (conflict) {
-    showModal('warn', 'Dress Code Sudah Digunakan', `Dress code tersebut sudah digunakan oleh Temple ${conflict.temple}. Silakan pilih dress code lain.`);
+    showModal('warn', 'Dress Code Sudah Digunakan', `Dress code tersebut sudah digunakan oleh Temple ${conflict.temple}.`);
     return;
   }
 
-  const existing = findEntry(data, temple);
-  if (existing) {
-    existing.dresscode = dresscode;
-    existing.normalized = normalized;
-    existing.timestamp = Date.now();
-  } else {
-    data.push({ temple, dresscode, normalized, timestamp: Date.now() });
-  }
-
-  saveData(data);
-  renderTable();
-  showToast(existing ? `Dress code Temple ${temple} berhasil diperbarui.` : `Dress code Temple ${temple} berhasil disimpan.`);
-  resetForm();
+  // Simpan data langsung ke lokasi Firebase `dresscode_data/temple_X`
+  set(ref(db, `dresscode_data/temple_${temple}`), {
+    temple: temple,
+    dresscode: dresscode,
+    normalized: normalized,
+    timestamp: Date.now()
+  }).then(() => {
+    showToast(editingTemple ? `Dress code Temple ${temple} diperbarui.` : `Dress code Temple ${temple} disimpan.`);
+    resetForm();
+  }).catch((err) => {
+    showToast('Gagal menyimpan ke database.', true);
+  });
 });
 
 function resetForm() {
@@ -605,19 +569,13 @@ function resetForm() {
   document.getElementById('cancelEditBtn').style.display = 'none';
   document.getElementById('inputTemple').disabled = false;
 }
-
 document.getElementById('cancelEditBtn').addEventListener('click', resetForm);
 
-/* ==========================================================================
-   EDIT & HAPUS
-   ========================================================================== */
 function startEdit(temple) {
-  const data = loadData();
-  const entry = findEntry(data, temple);
-
+  const entry = findEntry(temple);
   editingTemple = temple;
   document.getElementById('inputTemple').value = temple;
-  document.getElementById('inputTemple').disabled = true; // nomor temple tidak boleh diubah saat edit
+  document.getElementById('inputTemple').disabled = true;
   document.getElementById('inputDress').value = entry ? entry.dresscode : '';
   document.getElementById('formTitle').textContent = `Ubah Dress Code Temple ${temple}`;
   document.getElementById('submitBtn').textContent = '💾 Update Dress Code';
@@ -627,256 +585,118 @@ function startEdit(temple) {
 }
 
 function confirmDelete(temple) {
-  showConfirm(
-    'Hapus Dress Code?',
-    `Dress code Temple ${temple} akan dihapus dan statusnya kembali menjadi "Belum memilih". Lanjutkan?`,
-    () => {
-      const data = loadData().filter(d => d.temple !== temple);
-      saveData(data);
-      renderTable();
+  showConfirm('Hapus Dress Code?', `Dress code Temple ${temple} akan dihapus. Lanjutkan?`, () => {
+    set(ref(db, `dresscode_data/temple_${temple}`), null).then(() => {
       showToast(`Dress code Temple ${temple} dihapus.`, true);
-    }
-  );
+    });
+  });
 }
 
-/* ==========================================================================
-   PENCARIAN
-   ========================================================================== */
 document.getElementById('searchInput').addEventListener('input', renderTable);
 
-/* ==========================================================================
-   COPY UNTUK BROADCAST WHATSAPP
-   Menyusun teks broadcast berisi daftar dress code semua Temple,
-   lalu menyalinnya ke clipboard supaya tinggal tempel di WhatsApp.
-   ========================================================================== */
+// Broadcast WA
 function buildWhatsappText() {
-  const data = loadData();
   const total = getTotalTemple();
-
-  let lines = [];
-  lines.push('Halo semuanya! 👋✨');
-   lines.push('');
-  lines.push('Biar kompak dan nggak salah kostum, yuk catat Dresscode setiap Temple kita untuk:');
-  lines.push('📅 Day: [Isi di sini, misal: 1 / 2 / 3]');
-  lines.push('🗓️ Hari: [Isi di sini, misal: Senin / Selasa]');
-  lines.push('📆 Tanggal: [Isi di sini, misal: 10 Juli 2026]');
-   lines.push('');
-  lines.push('Berikut adalah daftarnya:');
-  lines.push('');
-
+  let lines = ['Halo semuanya! 👋✨', '', 'Biar kompak dan nggak salah kostum, yuk catat Dresscode setiap Temple kita untuk:', '📅 Day: [Isi di sini]', '🗓️ Hari: [Isi di sini]', '📆 Tanggal: [Isi di sini]', '', 'Berikut adalah daftarnya:', ''];
   for (let i = 1; i <= total; i++) {
-    const entry = findEntry(data, i);
+    const entry = findEntry(i);
     const hasDress = entry && entry.dresscode && entry.dresscode.trim() !== '';
     lines.push(`Temple ${i}: ${hasDress ? entry.dresscode : '-'}`);
   }
-
   return lines.join('\n');
 }
 
-function copyWhatsappText() {
+document.getElementById('whatsappBtn').addEventListener('click', () => {
   const text = buildWhatsappText();
-
-  const finishSuccess = () => {
-    showToast('Teks broadcast berhasil disalin! Tinggal tempel di WhatsApp.');
-  };
-
-  const showFallbackModal = () => {
-    showModal(
-      'info',
-      'Copy untuk Broadcast WhatsApp',
-      'Salin otomatis tidak tersedia di browser ini. Silakan salin teks di bawah secara manual.',
-      { withTextarea: true, textareaValue: text }
-    );
-  };
-
   if (navigator.clipboard && window.isSecureContext) {
-    navigator.clipboard.writeText(text).then(finishSuccess).catch(showFallbackModal);
-  } else {
-    // Fallback untuk browser/lingkungan lama
-    try {
-      const ta = document.createElement('textarea');
-      ta.value = text;
-      ta.style.position = 'fixed';
-      ta.style.opacity = '0';
-      document.body.appendChild(ta);
-      ta.focus();
-      ta.select();
-      const ok = document.execCommand('copy');
-      document.body.removeChild(ta);
-      if (ok) finishSuccess(); else showFallbackModal();
-    } catch (e) {
-      showFallbackModal();
-    }
-  }
+    navigator.clipboard.writeText(text).then(() => showToast('Teks broadcast berhasil disalin!')).catch(() => showFallback(text));
+  } else { showFallback(text); }
+});
+function showFallback(text) {
+  showModal('info', 'Copy untuk Broadcast WhatsApp', 'Salin teks di bawah secara manual.', { withTextarea: true, textareaValue: text });
 }
-document.getElementById('whatsappBtn').addEventListener('click', copyWhatsappText);
 
-/* ==========================================================================
-   RESET SEMUA DATA (butuh token)
-   ========================================================================== */
+// Reset data
 document.getElementById('resetAllBtn').addEventListener('click', function () {
-  showModal(
-    'warn',
-    'Reset Semua Data',
-    'Tindakan ini akan menghapus SEMUA dress code yang sudah diisi. Masukkan token untuk melanjutkan.',
-    { withInput: true, inputPlaceholder: 'Masukkan token...' },
-    (inputValue) => {
-      if (inputValue === RESET_TOKEN) {
-        localStorage.removeItem(STORAGE_KEY);
-        renderTable();
+  showModal('warn', 'Reset Semua Data', 'Masukkan token untuk melanjutkan.', { withInput: true, inputPlaceholder: 'Masukkan token...' }, (inputValue) => {
+    if (inputValue === RESET_TOKEN) {
+      set(dbRef, null).then(() => {
         closeModal();
         showToast('Semua data berhasil direset.', true);
-      } else {
-        showModal('warn', 'Token Salah', 'Token yang kamu masukkan tidak sesuai. Reset dibatalkan.');
-      }
-    }
-  );
+      });
+    } else { showModal('warn', 'Token Salah', 'Token tidak sesuai. Reset dibatalkan.'); }
+  });
 });
 
-/* ==========================================================================
-   PENGATURAN JUMLAH TEMPOL
-   ========================================================================== */
+// Settings
 document.getElementById('settingsBtn').addEventListener('click', function () {
-  showModal(
-    'info',
-    'Pengaturan Jumlah Temple',
-    'Atur berapa banyak Temple yang akan ditampilkan pada tabel preview.',
-    { withInput: true, inputType: 'number', inputPlaceholder: 'Contoh: 30', inputValue: getTotalTemple() },
-    (inputValue) => {
-      const n = parseInt(inputValue, 10);
-      if (Number.isFinite(n) && n > 0) {
-        setTotalTemple(n);
-        renderTable();
-        closeModal();
-        showToast(`Jumlah Temple diatur menjadi ${n}.`);
-      } else {
-        showModal('warn', 'Nilai Tidak Valid', 'Mohon masukkan angka yang valid dan lebih dari 0.');
-      }
-    }
-  );
+  showModal('info', 'Pengaturan Jumlah Temple', 'Atur berapa banyak Temple yang ditampilkan.', { withInput: true, inputType: 'number', inputPlaceholder: 'Contoh: 30', inputValue: getTotalTemple() }, (inputValue) => {
+    const n = parseInt(inputValue, 10);
+    if (Number.isFinite(n) && n > 0) {
+      setTotalTemple(n); renderTable(); closeModal(); showToast(`Jumlah Temple diatur menjadi ${n}.`);
+    } else { showModal('warn', 'Nilai Tidak Valid', 'Masukkan angka yang valid.'); }
+  });
 });
 
-/* ==========================================================================
-   DARK MODE
-   ========================================================================== */
+// Theme
 function applyTheme(theme) {
   document.documentElement.setAttribute('data-theme', theme);
   document.getElementById('darkModeBtn').textContent = theme === 'dark' ? '☀️' : '🌙';
   localStorage.setItem(THEME_KEY, theme);
 }
 document.getElementById('darkModeBtn').addEventListener('click', function () {
-  const current = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
-  applyTheme(current === 'dark' ? 'light' : 'dark');
+  applyTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
 });
 
-/* ==========================================================================
-   MODAL & KONFIRMASI (generik, bisa dipakai ulang)
-   ========================================================================== */
-let modalConfirmCallback = null;
-
-function showModal(type, title, message, options = {}, onSubmit = null) {
+// Generic Modals & Toasts
+window.showModal = function(type, title, message, options = {}, onSubmit = null) {
   const overlay = document.getElementById('modalOverlay');
   const box = document.getElementById('modalBox');
   const icon = document.getElementById('modalIcon');
   const iconMap = { warn: '⚠️', info: 'ℹ️', success: '✅' };
-
-  icon.className = 'modal-icon ' + type;
-  icon.textContent = iconMap[type] || 'ℹ️';
+  icon.className = 'modal-icon ' + type; icon.textContent = iconMap[type] || 'ℹ️';
   document.getElementById('modalTitle').textContent = title;
   document.getElementById('modalMessage').textContent = message;
-
   box.classList.toggle('wide', !!options.withTextarea);
-
-  const extra = document.getElementById('modalExtra');
-  extra.innerHTML = '';
+  const extra = document.getElementById('modalExtra'); extra.innerHTML = '';
   let inputEl = null;
   if (options.withInput) {
-    inputEl = document.createElement('input');
-    inputEl.type = options.inputType || 'text';
-    inputEl.placeholder = options.inputPlaceholder || '';
-    if (options.inputValue !== undefined) inputEl.value = options.inputValue;
+    inputEl = document.createElement('input'); inputEl.type = options.inputType || 'text';
+    inputEl.placeholder = options.inputPlaceholder || ''; if (options.inputValue !== undefined) inputEl.value = options.inputValue;
     extra.appendChild(inputEl);
   }
   let textareaEl = null;
   if (options.withTextarea) {
-    textareaEl = document.createElement('textarea');
-    textareaEl.readOnly = true;
-    textareaEl.value = options.textareaValue || '';
+    textareaEl = document.createElement('textarea'); textareaEl.readOnly = true; textareaEl.value = options.textareaValue || '';
     extra.appendChild(textareaEl);
   }
-
-  const actions = document.getElementById('modalActions');
-  actions.innerHTML = '';
-
-  const closeBtn = document.createElement('button');
-  closeBtn.className = 'btn btn-ghost btn-sm';
-  closeBtn.textContent = onSubmit ? 'Batal' : 'Tutup';
-  closeBtn.onclick = closeModal;
+  const actions = document.getElementById('modalActions'); actions.innerHTML = '';
+  const closeBtn = document.createElement('button'); closeBtn.className = 'btn btn-ghost btn-sm'; closeBtn.textContent = onSubmit ? 'Batal' : 'Tutup'; closeBtn.onclick = closeModal;
   actions.appendChild(closeBtn);
-
   if (textareaEl) {
-    const selectBtn = document.createElement('button');
-    selectBtn.className = 'btn btn-primary btn-sm';
-    selectBtn.textContent = '📋 Pilih Semua Teks';
-    selectBtn.onclick = () => { textareaEl.focus(); textareaEl.select(); };
-    actions.appendChild(selectBtn);
+    const selectBtn = document.createElement('button'); selectBtn.className = 'btn btn-primary btn-sm'; selectBtn.textContent = '📋 Pilih Semua';
+    selectBtn.onclick = () => { textareaEl.focus(); textareaEl.select(); }; actions.appendChild(selectBtn);
   }
-
   if (onSubmit) {
-    const okBtn = document.createElement('button');
-    okBtn.className = 'btn btn-primary btn-sm';
-    okBtn.textContent = 'Lanjutkan';
-    okBtn.onclick = () => onSubmit(inputEl ? inputEl.value.trim() : null);
-    actions.appendChild(okBtn);
+    const okBtn = document.createElement('button'); okBtn.className = 'btn btn-primary btn-sm'; okBtn.textContent = 'Lanjutkan';
+    okBtn.onclick = () => onSubmit(inputEl ? inputEl.value.trim() : null); actions.appendChild(okBtn);
   }
-
   overlay.classList.add('active');
   if (inputEl) setTimeout(() => inputEl.focus(), 100);
-  if (textareaEl) setTimeout(() => { textareaEl.focus(); textareaEl.select(); }, 100);
+}
+window.showConfirm = function(title, message, onConfirm) { showModal('warn', title, message, {}, () => { onConfirm(); closeModal(); }); }
+window.closeModal = function() { document.getElementById('modalOverlay').classList.remove('active'); }
+document.getElementById('modalOverlay').addEventListener('click', function (e) { if (e.target === this) closeModal(); });
+document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeModal(); });
+
+window.showToast = function(message, isDanger = false) {
+  const host = document.getElementById('toastHost'); const toast = document.createElement('div');
+  toast.className = 'toast' + (isDanger ? ' err' : ''); toast.textContent = message; host.appendChild(toast);
+  setTimeout(() => { toast.style.opacity = '0'; toast.style.transition = 'opacity .3s ease'; setTimeout(() => toast.remove(), 300); }, 2800);
 }
 
-function showConfirm(title, message, onConfirm) {
-  showModal('warn', title, message, {}, () => {
-    onConfirm();
-    closeModal();
-  });
-}
-
-function closeModal() {
-  document.getElementById('modalOverlay').classList.remove('active');
-}
-
-document.getElementById('modalOverlay').addEventListener('click', function (e) {
-  if (e.target === this) closeModal();
-});
-document.addEventListener('keydown', function (e) {
-  if (e.key === 'Escape') closeModal();
-});
-
-/* ==========================================================================
-   TOAST NOTIFIKASI
-   ========================================================================== */
-function showToast(message, isDanger = false) {
-  const host = document.getElementById('toastHost');
-  const toast = document.createElement('div');
-  toast.className = 'toast' + (isDanger ? ' err' : '');
-  toast.textContent = message;
-  host.appendChild(toast);
-  setTimeout(() => {
-    toast.style.opacity = '0';
-    toast.style.transition = 'opacity .3s ease';
-    setTimeout(() => toast.remove(), 300);
-  }, 2800);
-}
-
-/* ==========================================================================
-   INISIALISASI
-   ========================================================================== */
-(function init() {
-  const savedTheme = localStorage.getItem(THEME_KEY) || 'light';
-  applyTheme(savedTheme);
-  renderTable();
-})();
+// Init Theme saja, tabel di-render otomatis oleh onValue Firebase
+applyTheme(localStorage.getItem(THEME_KEY) || 'light');
 </script>
 </body>
 </html>
