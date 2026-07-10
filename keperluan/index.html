@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Keperluan Temple — KAT ITB 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght=600;700;800&family=Inter:wght=400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ==========================================================================
+   DESIGN TOKENS (Tema British Racing Green & Beige / Quiet Luxury)
+   ========================================================================== */
+:root{
+  --green:#0A3A20;       /* British Racing Green */
+  --green-dark:#052011;
+  --green-light:#155A36;
+  --green-tint:#E6F0EA;
+  --bg:#F4F1EA;          /* Soft Beige background */
+  --card-bg:#FFFFFF;
+  --border:#DCD7CC;
+  --text:#1A261F;
+  --text-muted:#68756E;
+  --danger:#D64545;
+  --danger-tint:#FDECEC;
+  --shadow:0 4px 24px rgba(10,58,32,.08);
+  --shadow-sm:0 2px 10px rgba(26,38,31,.06);
+  --radius-lg:20px;
+  --radius-md:14px;
+  --radius-sm:10px;
+  --font-display:'Poppins',system-ui,sans-serif;
+  --font-body:'Inter',system-ui,sans-serif;
+}
+[data-theme="dark"]{
+  --bg:#121A15;
+  --card-bg:#1A2620;
+  --border:#2D3D34;
+  --text:#F0F5F2;
+  --text-muted:#96A39C;
+  --green-tint:#1B3327;
+  --danger-tint:#3A1414;
+  --shadow:0 4px 24px rgba(0,0,0,.35);
+  --shadow-sm:0 2px 10px rgba(0,0,0,.25);
+}
+
+*{box-sizing:border-box; margin:0; padding:0;}
+body{
+  font-family:var(--font-body); background:var(--bg); color:var(--text);
+  min-height:100vh; transition:background .3s ease, color .3s ease; padding-bottom:60px;
+}
+.topbar{
+  background:linear-gradient(120deg,var(--green) 0%,var(--green-dark) 100%);
+  color:#fff; padding:22px 24px; position:sticky; top:0; z-index:40; box-shadow:0 2px 16px rgba(0,0,0,.15);
+}
+.topbar-inner{ max-width:960px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; }
+.brand{display:flex; align-items:center; gap:12px;}
+.brand-mark{
+  width:44px; height:44px; border-radius:12px; background:#fff;
+  display:flex; align-items:center; justify-content:center;
+  font-family:var(--font-display); font-weight:800; color:var(--green); font-size:18px; flex-shrink:0;
+}
+.brand-text h1{font-family:var(--font-display); font-size:18px; font-weight:700; line-height:1.2;}
+.brand-text p{font-size:12.5px; opacity:.85; font-weight:500;}
+.topbar-actions{display:flex; align-items:center; gap:8px;}
+.icon-btn{
+  width:40px; height:40px; border-radius:10px; background:rgba(255,255,255,.15);
+  border:1px solid rgba(255,255,255,.25); color:#fff; font-size:18px; cursor:pointer;
+  display:flex; align-items:center; justify-content:center; transition:background .2s ease, transform .15s ease;
+}
+.icon-btn:hover{background:rgba(255,255,255,.28); transform:translateY(-1px);}
+
+.container{max-width:960px; margin:0 auto; padding:24px 20px 0;}
+.section-gap{margin-top:22px;}
+.card{
+  background:var(--card-bg); border:1px solid var(--border); border-radius:var(--radius-lg);
+  box-shadow:var(--shadow-sm); padding:22px; transition:background .3s ease, border-color .3s ease;
+}
+.card h2{font-family:var(--font-display); font-size:16px; font-weight:700; margin-bottom:4px;}
+.card .subtitle{font-size:13px; color:var(--text-muted); margin-bottom:16px;}
+
+.stats-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+.stat-card{
+  background:var(--card-bg); border:1px solid var(--border); border-radius:var(--radius-md);
+  padding:16px 18px; box-shadow:var(--shadow-sm); position:relative; overflow:hidden;
+}
+.stat-card::before{ content:''; position:absolute; left:0; top:0; bottom:0; width:4px; background:var(--accent, var(--green));}
+.stat-card .num{font-family:var(--font-display); font-size:28px; font-weight:800;}
+.stat-card .label{font-size:12.5px; color:var(--text-muted); margin-top:2px; font-weight:600;}
+.stat-card.total{--accent:var(--green);}
+.stat-card.done{--accent:#1E8E5A;}
+.stat-card.pending{--accent:var(--danger);}
+
+.form-grid{display:grid; grid-template-columns:140px 1fr; gap:14px; align-items:end;}
+.field{display:flex; flex-direction:column; gap:6px;}
+.field label{font-size:12.5px; font-weight:600; color:var(--text-muted);}
+.field input{
+  padding:11px 13px; border-radius:var(--radius-sm); border:1.5px solid var(--border);
+  background:var(--bg); color:var(--text); font-size:14.5px; transition:border-color .2s ease;
+}
+.field input:focus{ border-color:var(--green-light); outline:none; }
+.form-actions{grid-column:1 / -1; display:flex; gap:10px; margin-top:4px; flex-wrap:wrap;}
+.btn{
+  border:none; cursor:pointer; font-family:var(--font-body); font-weight:600; font-size:14px;
+  padding:11px 20px; border-radius:var(--radius-sm); display:inline-flex; align-items:center; gap:6px;
+}
+.btn-primary{background:var(--green); color:#fff; box-shadow:0 4px 14px rgba(10,58,32,.3);}
+.btn-primary:hover{background:var(--green-dark);}
+.btn-ghost{background:transparent; color:var(--text); border:1.5px solid var(--border);}
+.btn-ghost:hover{border-color:var(--green-light); color:var(--green);}
+.btn-sm{padding:7px 12px; font-size:12.5px; border-radius:8px;}
+.btn-outline-danger{background:transparent; border:1.5px solid var(--danger); color:var(--danger);}
+.btn-outline-danger:hover{background:var(--danger-tint);}
+.btn-whatsapp{background:#1E8E5A; color:#fff;}
+
+.toolbar{ display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between; }
+.search-box{
+  flex:1; min-width:180px; display:flex; align-items:center; gap:8px;
+  background:var(--bg); border:1.5px solid var(--border); border-radius:var(--radius-sm); padding:9px 14px;
+}
+.search-box input{border:none; background:transparent; outline:none; color:var(--text); font-size:14px; width:100%;}
+
+.table-wrap{overflow-x:auto; border-radius:var(--radius-md); border:1px solid var(--border);}
+table{width:100%; border-collapse:collapse; min-width:560px;}
+thead th{
+  text-align:left; font-size:12px; text-transform:uppercase; color:var(--text-muted); padding:12px 16px;
+  background:var(--bg); border-bottom:1px solid var(--border);
+}
+tbody td{padding:13px 16px; font-size:14px; border-bottom:1px solid var(--border);}
+tbody tr:hover{background:var(--green-tint);}
+.status-pill{ display:inline-flex; align-items:center; gap:6px; padding:4px 10px; border-radius:999px; font-size:12.5px; font-weight:700; }
+.status-pill.ok{background:#E6F5EE; color:#1E8E5A;}
+.status-pill.no{background:var(--danger-tint); color:var(--danger);}
+.dot{width:8px; height:8px; border-radius:50%; background:currentColor;}
+.row-actions{display:flex; gap:6px;}
+.keperluan-text{font-weight:600;}
+.empty-text{color:var(--text-muted); font-style:italic;}
+
+.modal-overlay{
+  position:fixed; inset:0; background:rgba(10,20,15,.5); display:flex; align-items:center; justify-content:center;
+  z-index:100; padding:20px; opacity:0; pointer-events:none; transition:opacity .2s ease;
+}
+.modal-overlay.active{opacity:1; pointer-events:auto;}
+.modal-box{
+  background:var(--card-bg); border-radius:var(--radius-lg); max-width:420px; width:100%; padding:26px;
+  box-shadow:0 20px 60px rgba(0,0,0,.3); border:1px solid var(--border);
+}
+.modal-box.wide{max-width:560px;}
+.modal-icon{ width:48px; height:48px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:22px; margin-bottom:14px; }
+.modal-icon.warn{background:var(--danger-tint); color:var(--danger);}
+.modal-icon.info{background:var(--green-tint); color:var(--green);}
+.modal-box h3{font-family:var(--font-display); font-size:17px; margin-bottom:8px;}
+.modal-box p{font-size:14px; color:var(--text-muted); line-height:1.55; margin-bottom:18px;}
+.modal-box input, .modal-box textarea{
+  width:100%; padding:10px 13px; border-radius:var(--radius-sm); border:1.5px solid var(--border);
+  background:var(--bg); color:var(--text); font-size:14px; margin-bottom:16px;
+}
+.modal-box textarea{min-height:220px; resize:vertical;}
+.modal-actions{display:flex; gap:10px; justify-content:flex-end;}
+
+#toastHost{position:fixed; bottom:20px; right:20px; z-index:150; display:flex; flex-direction:column; gap:10px;}
+.toast{ background:var(--card-bg); border:1px solid var(--border); border-left:4px solid #1E8E5A; padding:12px 16px; border-radius:var(--radius-sm); box-shadow:var(--shadow); font-size:13.5px; min-width:220px; }
+.toast.err{border-left-color:var(--danger);}
+footer{text-align:center; padding:30px 20px 10px; font-size:12.5px; color:var(--text-muted);}
+@media (max-width:600px){ .form-grid{grid-template-columns:1fr;} .stats-grid{grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <div class="brand-mark">KAT</div>
+      <div class="brand-text">
+        <h1>Keperluan & Logistik Temple</h1>
+        <p>KAT ITB 2026 &middot; anti tabrakan logistik kelompok</p>
+      </div>
+    </div>
+    <div class="topbar-actions">
+      <button class="icon-btn" id="settingsBtn" title="Pengaturan jumlah Temple">⚙️</button>
+      <button class="icon-btn" id="darkModeBtn" title="Ganti tema">🌙</button>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="stats-grid" id="statsGrid">
+    <div class="stat-card total"><div class="num" id="statTotal">0</div><div class="label">Total Temple</div></div>
+    <div class="stat-card done"><div class="num" id="statDone">0</div><div class="label">Sudah Mengisi</div></div>
+    <div class="stat-card pending"><div class="num" id="statPending">0</div><div class="label">Belum Mengisi</div></div>
+  </div>
+
+  <div class="card section-gap">
+    <h2 id="formTitle">Isi / Ubah Keperluan Temple</h2>
+    <p class="subtitle">Sistem otomatis mendeteksi kesamaan input agar tidak kembar dengan kelompok lain.</p>
+    <form id="keperluanForm">
+      <div class="form-grid">
+        <div class="field">
+          <label for="inputTemple">Nomor Temple</label>
+          <input type="number" id="inputTemple" min="1" placeholder="7" required>
+        </div>
+        <div class="field">
+          <label for="inputKeperluan">Nama Barang / Keperluan</label>
+          <input type="text" id="inputKeperluan" placeholder="Contoh: Banner Kelompok A" required>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary" id="submitBtn">✅ Simpan Keperluan</button>
+          <button type="button" class="btn btn-ghost" id="cancelEditBtn" style="display:none;">Batal Edit</button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="card section-gap">
+    <div class="toolbar">
+      <div class="search-box"><span>🔍</span><input type="text" id="searchInput" placeholder="Cari nomor Temple atau keperluan..."></div>
+      <div class="toolbar-buttons">
+        <button class="btn btn-whatsapp btn-sm" id="whatsappBtn">💬 Copy Broadcast WA</button>
+        <button class="btn btn-outline-danger btn-sm" id="resetAllBtn">🗑️ Reset Semua Data</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card section-gap">
+    <h2>Preview Semua Logistik Temple</h2>
+    <p class="subtitle">Hijau = sudah plot keperluan &middot; Merah = belum plot</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Temple</th><th>Keperluan / Barang</th><th>Status</th><th>Aksi</th></tr></thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+  </div>
+  <footer>Dibuat untuk Calon Mentor KAT ITB 2026</footer>
+</div>
+
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal-box" id="modalBox">
+    <div class="modal-icon" id="modalIcon">ℹ️</div>
+    <h3 id="modalTitle">Judul</h3><p id="modalMessage">Pesan</p><div id="modalExtra"></div><div class="modal-actions" id="modalActions"></div>
+  </div>
+</div>
+<div id="toastHost"></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+// !!! GUNAKAN CONFIG YANG SAMA DENGAN APLIKASI DRESSCODE !!!
+const firebaseConfig = {
+  apiKey: "AIzaSyBzZqFz1RHRcLaotCaPK0NZn6utt6p9dHg",
+  authDomain: "kat-dresscode-26.firebaseapp.com",
+  databaseURL: "https://kat-dresscode-26-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "kat-dresscode-26",
+  storageBucket: "kat-dresscode-26.firebasestorage.app",
+  messagingSenderId: "787595044484",
+  appId: "1:787595044484:web:c68169081c07643b6b04d1",
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+const dbRef = ref(db, 'keperluan_data'); // <-- Menggunakan nama penampung terpisah khusus logistik
+
+const TOTAL_KEY = 'kat_total_temple_keperluan';
+const THEME_KEY = 'kat_theme_keperluan';
+const RESET_TOKEN = 'macanTutulUhuyanjay';
+
+let globalData = [];
+let editingTemple = null;
+
+// Mengabaikan kata umum seputar barang/logistik agar sistem pengecekan kembaran lebih akurat
+const STOPWORDS = new Set(['barang', 'alat', 'keperluan', 'logistik', 'bawaan', 'tugas', 'kelompok', 'untuk', 'buat']);
+const SYNONYMS = { 'bener':'banner', 'spanduk':'banner', 'print':'cetak', 'papan':'karton' };
+
+function normalizeInput(text) {
+  if (!text) return '';
+  let s = text.toLowerCase().replace(/[^a-z0-9\s]/g, ' ');
+  let tokens = s.split(/\s+/).filter(Boolean).map(tok => SYNONYMS[tok] || tok).filter(tok => !STOPWORDS.has(tok));
+  return Array.from(new Set(tokens)).sort().join(' ');
+}
+
+function getTotalTemple() {
+  const v = parseInt(localStorage.getItem(TOTAL_KEY), 10);
+  return Number.isFinite(v) && v > 0 ? v : 16;
+}
+function setTotalTemple(n) { localStorage.setItem(TOTAL_KEY, String(n)); }
+function findEntry(num) { return globalData.find(d => d.temple === num); }
+function findConflict(norm, excl) { return norm ? globalData.find(d => d.normalized === norm && d.temple !== excl) : null; }
+
+onValue(dbRef, (snapshot) => {
+  const data = snapshot.val();
+  globalData = data ? Object.keys(data).map(key => data[key]) : [];
+  renderTable();
+});
+
+function renderStats() {
+  const total = getTotalTemple();
+  const done = globalData.filter(d => d.keperluan && d.keperluan.trim() !== '').length;
+  document.getElementById('statTotal').textContent = total;
+  document.getElementById('statDone').textContent = done;
+  document.getElementById('statPending').textContent = Math.max(total - done, 0);
+}
+
+function renderTable() {
+  const total = getTotalTemple();
+  const searchTerm = document.getElementById('searchInput').value.trim().toLowerCase();
+  const tbody = document.getElementById('tableBody');
+  tbody.innerHTML = '';
+
+  for (let i = 1; i <= total; i++) {
+    const entry = findEntry(i);
+    const hasData = entry && entry.keperluan && entry.keperluan.trim() !== '';
+
+    if (searchTerm && !String(i).includes(searchTerm) && !(hasData && entry.keperluan.toLowerCase().includes(searchTerm))) continue;
+
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><strong>${i}</strong></td>
+      <td>${hasData ? `<span class="keperluan-text">${escapeHtml(entry.keperluan)}</span>` : `<span class="empty-text">Belum mengisi</span>`}</td>
+      <td>${hasData ? `<span class="status-pill ok"><span class="dot"></span>Sudah</span>` : `<span class="status-pill no"><span class="dot"></span>Belum</span>`}</td>
+      <td>
+        <div class="row-actions">
+          <button class="btn btn-ghost btn-sm" id="edit-btn-${i}">✏️ Edit</button>
+          ${hasData ? `<button class="btn btn-outline-danger btn-sm" id="del-btn-${i}">🗑️</button>` : ''}
+        </div>
+      </td>
+    `;
+    tbody.appendChild(tr);
+    document.getElementById(`edit-btn-${i}`).addEventListener('click', () => startEdit(i));
+    if (hasData) document.getElementById(`del-btn-${i}`).addEventListener('click', () => confirmDelete(i));
+  }
+  renderStats();
+}
+
+function escapeHtml(str) {
+  const div = document.createElement('div'); div.textContent = str; return div.innerHTML;
+}
+
+document.getElementById('keperluanForm').addEventListener('submit', function (e) {
+  e.preventDefault();
+  const temple = parseInt(document.getElementById('inputTemple').value, 10);
+  const keperluan = document.getElementById('inputKeperluan').value.trim();
+
+  if (!Number.isFinite(temple) || temple < 1 || !keperluan) return;
+
+  const normalized = normalizeInput(keperluan);
+  if (!normalized) {
+    showModal('warn', 'Input Terlalu Umum', 'Mohon isi nama keperluan/barang yang lebih spesifik.');
+    return;
+  }
+
+  const conflict = findConflict(normalized, temple);
+  if (conflict) {
+    showModal('warn', 'Keperluan Sudah Di-plot', `Barang/Keperluan ini sudah dipilih oleh Temple ${conflict.temple}.`);
+    return;
+  }
+
+  set(ref(db, `keperluan_data/temple_${temple}`), { temple, keperluan, normalized, timestamp: Date.now() })
+    .then(() => { showToast('Data keperluan berhasil disimpan.'); resetForm(); });
+});
+
+function resetForm() {
+  editingTemple = null; document.getElementById('keperluanForm').reset();
+  document.getElementById('formTitle').textContent = 'Isi / Ubah Keperluan Temple';
+  document.getElementById('submitBtn').textContent = '✅ Simpan Keperluan';
+  document.getElementById('cancelEditBtn').style.display = 'none';
+  document.getElementById('inputTemple').disabled = false;
+}
+document.getElementById('cancelEditBtn').addEventListener('click', resetForm);
+
+function startEdit(temple) {
+  const entry = findEntry(temple); editingTemple = temple;
+  document.getElementById('inputTemple').value = temple; document.getElementById('inputTemple').disabled = true;
+  document.getElementById('inputKeperluan').value = entry ? entry.keperluan : '';
+  document.getElementById('formTitle').textContent = `Ubah Keperluan Temple ${temple}`;
+  document.getElementById('submitBtn').textContent = '💾 Update Keperluan';
+  document.getElementById('cancelEditBtn').style.display = 'inline-flex'; document.getElementById('inputKeperluan').focus();
+}
+
+function confirmDelete(temple) {
+  showConfirm('Hapus Keperluan?', `Data keperluan Temple ${temple} akan dikosongkan. Lanjutkan?`, () => {
+    set(ref(db, `keperluan_data/temple_${temple}`), null).then(() => showToast('Data berhasil dihapus.', true));
+  });
+}
+
+document.getElementById('searchInput').addEventListener('input', renderTable);
+
+document.getElementById('whatsappBtn').addEventListener('click', () => {
+  const total = getTotalTemple();
+  let lines = ['Halo semuanya! 👋✨', '', 'Berikut adalah daftar plot Keperluan & Logistik setiap Temple:', ''];
+  for (let i = 1; i <= total; i++) {
+    const entry = findEntry(i);
+    lines.push(`Temple ${i}: ${entry && entry.keperluan ? entry.keperluan : '-'}`);
+  }
+  const text = lines.join('\n');
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(text).then(() => showToast('Teks berhasil disalin!')).catch(() => showFallback(text));
+  } else { showFallback(text); }
+});
+
+function showFallback(text) { showModal('info', 'Copy Broadcast WhatsApp', 'Salin manual teks berikut:', { withTextarea: true, textareaValue: text }); }
+
+document.getElementById('resetAllBtn').addEventListener('click', function () {
+  showModal('warn', 'Reset Data', 'Masukkan token untuk menghapus seluruh logistik:', { withInput: true, inputPlaceholder: 'Token...' }, (val) => {
+    if (val === RESET_TOKEN) set(dbRef, null).then(() => { closeModal(); showToast('Semua data keperluan direset.', true); });
+    else showModal('warn', 'Token Salah', 'Reset dibatalkan.');
+  });
+});
+
+document.getElementById('settingsBtn').addEventListener('click', function () {
+  showModal('info', 'Jumlah Temple', 'Atur batas maksimum Temple:', { withInput: true, inputType: 'number', inputValue: getTotalTemple() }, (val) => {
+    const n = parseInt(val, 10);
+    if (n > 0) { setTotalTemple(n); renderTable(); closeModal(); showToast(`Total diatur ke ${n}.`); }
+  });
+});
+
+function applyTheme(theme) { document.documentElement.setAttribute('data-theme', theme); document.getElementById('darkModeBtn').textContent = theme === 'dark' ? '☀️' : '🌙'; localStorage.setItem(THEME_KEY, theme); }
+document.getElementById('darkModeBtn').addEventListener('click', () => applyTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'));
+
+window.showModal = function(type, title, message, options = {}, onSubmit = null) {
+  const overlay = document.getElementById('modalOverlay'); const box = document.getElementById('modalBox'); const icon = document.getElementById('modalIcon');
+  icon.className = 'modal-icon ' + type; icon.textContent = type === 'warn' ? '⚠️' : 'ℹ️';
+  document.getElementById('modalTitle').textContent = title; document.getElementById('modalMessage').textContent = message;
+  box.classList.toggle('wide', !!options.withTextarea); const extra = document.getElementById('modalExtra'); extra.innerHTML = '';
+  let inputEl = null; if (options.withInput) { inputEl = document.createElement('input'); inputEl.type = options.inputType || 'text'; if (options.inputValue) inputEl.value = options.inputValue; extra.appendChild(inputEl); }
+  let taEl = null; if (options.withTextarea) { taEl = document.createElement('textarea'); taEl.readOnly = true; taEl.value = options.textareaValue || ''; extra.appendChild(taEl); }
+  const actions = document.getElementById('modalActions'); actions.innerHTML = '';
+  const closeBtn = document.createElement('button'); closeBtn.className = 'btn btn-ghost btn-sm'; closeBtn.textContent = onSubmit ? 'Batal' : 'Tutup'; closeBtn.onclick = closeModal; actions.appendChild(closeBtn);
+  if (taEl) { const selBtn = document.createElement('button'); selBtn.className = 'btn btn-primary btn-sm'; selBtn.textContent = '📋 Pilih Semua'; selBtn.onclick = () => { taEl.focus(); taEl.select(); }; actions.appendChild(selBtn); }
+  if (onSubmit) { const okBtn = document.createElement('button'); okBtn.className = 'btn btn-primary btn-sm'; okBtn.textContent = 'Lanjutkan'; okBtn.onclick = () => onSubmit(inputEl ? inputEl.value.trim() : null); actions.appendChild(okBtn); }
+  overlay.classList.add('active');
+};
+window.closeModal = function() { document.getElementById('modalOverlay').classList.remove('active'); };
+window.showConfirm = function(title, message, onConfirm) { showModal('warn', title, message, {}, () => { onConfirm(); closeModal(); }); };
+window.showToast = function(msg, err = false) { const host = document.getElementById('toastHost'); const t = document.createElement('div'); t.className = 'toast' + (err ? ' err' : ''); t.textContent = msg; host.appendChild(t); setTimeout(() => { t.style.opacity = '0'; t.style.transition = 'opacity .3s'; setTimeout(() => t.remove(), 300); }, 2800); };
+
+applyTheme(localStorage.getItem(THEME_KEY) || 'light');
+</script>
+</body>
+</html>
