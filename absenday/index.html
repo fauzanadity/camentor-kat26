@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Absensi Clan — KAT ITB 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ==========================================================================
+   DESIGN TOKENS
+   ========================================================================== */
+:root{
+  --blue:#1553A6;
+  --blue-dark:#0E3C7A;
+  --blue-light:#3B77CC;
+  --blue-tint:#E9F0FB;
+  --bg:#F5F7FA;
+  --card-bg:#FFFFFF;
+  --border:#E1E6ED;
+  --text:#101B24;
+  --text-muted:#6B7887;
+  --green:#1E8E5A;
+  --green-tint:#E6F5EE;
+  --amber:#B8860B;
+  --amber-tint:#FBF3DF;
+  --danger:#D64545;
+  --danger-tint:#FDECEC;
+  --shadow:0 4px 24px rgba(21,83,166,.08);
+  --shadow-sm:0 2px 10px rgba(16,27,36,.06);
+  --radius-lg:20px;
+  --radius-md:14px;
+  --radius-sm:10px;
+  --font-display:'Poppins',system-ui,sans-serif;
+  --font-body:'Inter',system-ui,sans-serif;
+}
+[data-theme="dark"]{
+  --bg:#0F1720;
+  --card-bg:#17222E;
+  --border:#25333F;
+  --text:#EDF2F7;
+  --text-muted:#9AABBB;
+  --blue-tint:#122A47;
+  --green-tint:#122A22;
+  --amber-tint:#3A2E10;
+  --danger-tint:#3A1414;
+  --shadow:0 4px 24px rgba(0,0,0,.35);
+  --shadow-sm:0 2px 10px rgba(0,0,0,.25);
+}
+
+*{box-sizing:border-box; margin:0; padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:var(--font-body);
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  transition:background .3s ease, color .3s ease;
+  padding-bottom:60px;
+}
+:focus-visible{outline:3px solid var(--blue-light); outline-offset:2px;}
+@media (prefers-reduced-motion: reduce){
+  *{animation-duration:.01ms !important; transition-duration:.01ms !important;}
+}
+
+/* ==========================================================================
+   HEADER
+   ========================================================================== */
+.topbar{
+  background:linear-gradient(120deg,var(--blue) 0%,var(--blue-dark) 100%);
+  color:#fff;
+  padding:22px 24px;
+  position:sticky; top:0; z-index:40;
+  box-shadow:0 2px 16px rgba(0,0,0,.15);
+}
+.topbar-inner{
+  max-width:960px; margin:0 auto;
+  display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;
+}
+.brand{display:flex; align-items:center; gap:12px;}
+.brand-mark{
+  width:44px; height:44px; border-radius:12px;
+  background:#fff;
+  display:flex; align-items:center; justify-content:center;
+  font-family:var(--font-display); font-weight:800; color:var(--blue);
+  font-size:16px;
+  flex-shrink:0;
+}
+.brand-text h1{font-family:var(--font-display); font-size:18px; font-weight:700; line-height:1.2;}
+.brand-text p{font-size:12.5px; opacity:.85; font-weight:500;}
+.topbar-actions{display:flex; align-items:center; gap:8px;}
+.icon-btn{
+  width:40px; height:40px; border-radius:10px;
+  background:rgba(255,255,255,.15);
+  border:1px solid rgba(255,255,255,.25);
+  color:#fff; font-size:18px; cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  transition:background .2s ease, transform .15s ease;
+}
+.icon-btn:hover{background:rgba(255,255,255,.28); transform:translateY(-1px);}
+
+/* ==========================================================================
+   LAYOUT
+   ========================================================================== */
+.container{max-width:960px; margin:0 auto; padding:24px 20px 0;}
+.section-gap{margin-top:22px;}
+.card{
+  background:var(--card-bg);
+  border:1px solid var(--border);
+  border-radius:var(--radius-lg);
+  box-shadow:var(--shadow-sm);
+  padding:22px;
+  transition:background .3s ease, border-color .3s ease;
+}
+.card h2{font-family:var(--font-display); font-size:16px; font-weight:700; margin-bottom:4px;}
+.card .subtitle{font-size:13px; color:var(--text-muted); margin-bottom:16px;}
+
+/* ==========================================================================
+   STATS
+   ========================================================================== */
+.stats-grid{
+  display:grid; grid-template-columns:repeat(4,1fr); gap:14px;
+}
+.stat-card{
+  background:var(--card-bg);
+  border:1px solid var(--border);
+  border-radius:var(--radius-md);
+  padding:16px 18px;
+  box-shadow:var(--shadow-sm);
+  position:relative; overflow:hidden;
+}
+.stat-card::before{
+  content:''; position:absolute; left:0; top:0; bottom:0; width:4px;
+  background:var(--accent, var(--blue));
+}
+.stat-card .num{font-family:var(--font-display); font-size:26px; font-weight:800;}
+.stat-card .label{font-size:12px; color:var(--text-muted); margin-top:2px; font-weight:600;}
+.stat-card.total{--accent:var(--blue);}
+.stat-card.hadir{--accent:var(--green);}
+.stat-card.izin{--accent:var(--amber);}
+.stat-card.pending{--accent:var(--danger);}
+
+/* ==========================================================================
+   FORM
+   ========================================================================== */
+.form-grid{display:grid; grid-template-columns:110px 1fr 1fr; gap:14px; align-items:end;}
+.field{display:flex; flex-direction:column; gap:6px;}
+.field label{font-size:12.5px; font-weight:600; color:var(--text-muted);}
+.field input, .field select{
+  padding:11px 13px;
+  border-radius:var(--radius-sm);
+  border:1.5px solid var(--border);
+  background:var(--bg);
+  color:var(--text);
+  font-size:14.5px;
+  font-family:var(--font-body);
+  transition:border-color .2s ease, box-shadow .2s ease;
+}
+.field input:focus, .field select:focus{
+  border-color:var(--blue-light);
+  box-shadow:0 0 0 3px var(--blue-tint);
+  outline:none;
+}
+.form-actions{grid-column:1 / -1; display:flex; gap:10px; margin-top:4px; flex-wrap:wrap;}
+.btn{
+  border:none; cursor:pointer; font-family:var(--font-body); font-weight:600; font-size:14px;
+  padding:11px 20px; border-radius:var(--radius-sm);
+  transition:transform .15s ease, box-shadow .15s ease, background .2s ease;
+  display:inline-flex; align-items:center; gap:6px;
+}
+.btn:active{transform:scale(.97);}
+.btn-primary{background:var(--blue); color:#fff; box-shadow:0 4px 14px rgba(21,83,166,.3);}
+.btn-primary:hover{background:var(--blue-dark);}
+.btn-ghost{background:transparent; color:var(--text); border:1.5px solid var(--border);}
+.btn-ghost:hover{border-color:var(--blue-light); color:var(--blue);}
+.btn-sm{padding:7px 12px; font-size:12.5px; border-radius:8px;}
+.btn-danger{background:var(--danger); color:#fff;}
+.btn-danger:hover{background:#b83636;}
+.btn-outline-danger{background:transparent; border:1.5px solid var(--danger); color:var(--danger);}
+.btn-outline-danger:hover{background:var(--danger-tint);}
+.btn-whatsapp{background:#1E8E5A; color:#fff; box-shadow:0 4px 14px rgba(30,142,90,.3);}
+.btn-whatsapp:hover{background:#166E46;}
+
+/* ==========================================================================
+   TOOLBAR
+   ========================================================================== */
+.toolbar{
+  display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between;
+}
+.search-box{
+  flex:1; min-width:180px;
+  display:flex; align-items:center; gap:8px;
+  background:var(--bg); border:1.5px solid var(--border); border-radius:var(--radius-sm);
+  padding:9px 14px;
+}
+.search-box input{border:none; background:transparent; outline:none; color:var(--text); font-size:14px; width:100%; font-family:var(--font-body);}
+.toolbar-buttons{display:flex; gap:8px; flex-wrap:wrap;}
+
+/* ==========================================================================
+   BROADCAST META FIELDS
+   ========================================================================== */
+.meta-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+
+/* ==========================================================================
+   TABLE
+   ========================================================================== */
+.table-wrap{overflow-x:auto; border-radius:var(--radius-md); border:1px solid var(--border);}
+table{width:100%; border-collapse:collapse; min-width:640px;}
+thead th{
+  text-align:left; font-size:12px; text-transform:uppercase; letter-spacing:.04em;
+  color:var(--text-muted); font-weight:700; padding:12px 16px;
+  background:var(--bg); border-bottom:1px solid var(--border); position:sticky; top:0;
+}
+tbody td{padding:13px 16px; font-size:14px; border-bottom:1px solid var(--border);}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr{transition:background .15s ease;}
+tbody tr:hover{background:var(--blue-tint);}
+.status-pill{
+  display:inline-flex; align-items:center; gap:6px; padding:4px 10px; border-radius:999px;
+  font-size:12.5px; font-weight:700;
+}
+.status-pill.ok{background:var(--green-tint); color:var(--green);}
+.status-pill.no{background:var(--danger-tint); color:var(--danger);}
+.dot{width:8px; height:8px; border-radius:50%; background:currentColor; flex-shrink:0;}
+.row-actions{display:flex; gap:6px;}
+.count-text{font-weight:600;}
+.count-hadir{color:var(--green);}
+.count-izin{color:var(--amber);}
+.empty-text{color:var(--text-muted); font-style:italic;}
+
+/* ==========================================================================
+   MODAL
+   ========================================================================== */
+.modal-overlay{
+  position:fixed; inset:0; background:rgba(10,16,24,.5);
+  display:flex; align-items:center; justify-content:center; z-index:100;
+  padding:20px; opacity:0; pointer-events:none; transition:opacity .2s ease;
+}
+.modal-overlay.active{opacity:1; pointer-events:auto;}
+.modal-box{
+  background:var(--card-bg); border-radius:var(--radius-lg); max-width:420px; width:100%;
+  padding:26px; box-shadow:0 20px 60px rgba(0,0,0,.3);
+  transform:translateY(14px) scale(.97); transition:transform .25s ease;
+  border:1px solid var(--border);
+}
+.modal-overlay.active .modal-box{transform:translateY(0) scale(1);}
+.modal-box.wide{max-width:560px;}
+.modal-icon{
+  width:48px; height:48px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+  font-size:22px; margin-bottom:14px;
+}
+.modal-icon.warn{background:var(--danger-tint); color:var(--danger);}
+.modal-icon.info{background:var(--blue-tint); color:var(--blue);}
+.modal-icon.success{background:var(--green-tint); color:var(--green);}
+.modal-box h3{font-family:var(--font-display); font-size:17px; margin-bottom:8px;}
+.modal-box p{font-size:14px; color:var(--text-muted); line-height:1.55; margin-bottom:18px;}
+.modal-box input{
+  width:100%; padding:10px 13px; border-radius:var(--radius-sm); border:1.5px solid var(--border);
+  background:var(--bg); color:var(--text); font-size:14px; margin-bottom:16px; font-family:var(--font-body);
+}
+.modal-box textarea{
+  width:100%; padding:12px 13px; border-radius:var(--radius-sm); border:1.5px solid var(--border);
+  background:var(--bg); color:var(--text); font-size:13.5px; margin-bottom:16px; font-family:var(--font-body);
+  resize:vertical; min-height:260px; line-height:1.6;
+}
+.modal-actions{display:flex; gap:10px; justify-content:flex-end;}
+
+/* Toast */
+#toastHost{position:fixed; bottom:20px; right:20px; z-index:150; display:flex; flex-direction:column; gap:10px;}
+.toast{
+  background:var(--card-bg); border:1px solid var(--border); border-left:4px solid var(--green);
+  padding:12px 16px; border-radius:var(--radius-sm); box-shadow:var(--shadow); font-size:13.5px;
+  min-width:220px; animation:slideIn .3s ease;
+}
+.toast.err{border-left-color:var(--danger);}
+@keyframes slideIn{from{opacity:0; transform:translateX(20px);} to{opacity:1; transform:translateX(0);}}
+
+footer{text-align:center; padding:30px 20px 10px; font-size:12.5px; color:var(--text-muted);}
+
+@media (max-width:600px){
+  .form-grid{grid-template-columns:1fr 1fr;}
+  .form-grid .field:first-child{grid-column:1 / -1;}
+  .meta-grid{grid-template-columns:1fr;}
+  .stats-grid{grid-template-columns:1fr 1fr;}
+  .brand-text p{display:none;}
+}
+</style>
+</head>
+<body>
+
+<!-- ============================== HEADER ============================== -->
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <div class="brand-mark">KAT</div>
+      <div class="brand-text">
+        <h1>Absensi Clan</h1>
+        <p>KAT ITB 2026 &middot; rekap hadir &amp; izin per clan</p>
+      </div>
+    </div>
+    <div class="topbar-actions">
+      <button class="icon-btn" id="settingsBtn" title="Pengaturan jumlah Clan">⚙️</button>
+      <button class="icon-btn" id="darkModeBtn" title="Ganti tema">🌙</button>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- ============================== STATS ============================== -->
+  <div class="stats-grid" id="statsGrid">
+    <div class="stat-card total">
+      <div class="num" id="statTotalClan">0</div>
+      <div class="label">Total Clan</div>
+    </div>
+    <div class="stat-card hadir">
+      <div class="num" id="statHadir">0</div>
+      <div class="label">Total Hadir</div>
+    </div>
+    <div class="stat-card izin">
+      <div class="num" id="statIzin">0</div>
+      <div class="label">Total Izin</div>
+    </div>
+    <div class="stat-card pending">
+      <div class="num" id="statPending">0</div>
+      <div class="label">Belum Lapor</div>
+    </div>
+  </div>
+
+  <!-- ============================== FORM ============================== -->
+  <div class="card section-gap">
+    <h2 id="formTitle">Isi / Ubah Absensi</h2>
+    <p class="subtitle">Setiap PJ Clan mengisi jumlah yang hadir dan izin untuk clan-nya.</p>
+    <form id="absenForm">
+      <div class="form-grid">
+        <div class="field">
+          <label for="inputClan">Nomor Clan</label>
+          <input type="number" id="inputClan" min="1" placeholder="7" required>
+        </div>
+        <div class="field">
+          <label for="inputHadir">Jumlah Hadir</label>
+          <input type="number" id="inputHadir" min="0" placeholder="0" required>
+        </div>
+        <div class="field">
+          <label for="inputIzin">Jumlah Izin</label>
+          <input type="number" id="inputIzin" min="0" placeholder="0" required>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary" id="submitBtn">✅ Simpan Absensi</button>
+          <button type="button" class="btn btn-ghost" id="cancelEditBtn" style="display:none;">Batal Edit</button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <!-- ============================== META BROADCAST ============================== -->
+  <div class="card section-gap">
+    <h2>Info Broadcast</h2>
+    <p class="subtitle">Isi Day dan Hari, Tanggal untuk dimasukkan ke teks broadcast.</p>
+    <div class="meta-grid">
+      <div class="field">
+        <label for="inputDay">Day</label>
+        <input type="text" id="inputDay" placeholder="Contoh: Day 3">
+      </div>
+      <div class="field">
+        <label for="inputTanggal">Hari, Tanggal</label>
+        <input type="text" id="inputTanggal" placeholder="Contoh: Rabu, 15 Juli 2026">
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================== TOOLBAR ============================== -->
+  <div class="card section-gap">
+    <div class="toolbar">
+      <div class="search-box">
+        <span>🔍</span>
+        <input type="text" id="searchInput" placeholder="Cari nomor Clan...">
+      </div>
+      <div class="toolbar-buttons">
+        <button class="btn btn-whatsapp btn-sm" id="whatsappBtn">💬 Copy untuk Broadcast WhatsApp</button>
+        <button class="btn btn-outline-danger btn-sm" id="resetAllBtn">🗑️ Reset Semua Data</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================== TABLE ============================== -->
+  <div class="card section-gap">
+    <h2>Preview Semua Clan</h2>
+    <p class="subtitle">Hijau = sudah lapor &middot; Merah = belum lapor</p>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Clan</th>
+            <th>Hadir</th>
+            <th>Izin</th>
+            <th>Status</th>
+            <th>Aksi</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <footer>Dibuat untuk PJ Clan KAT ITB 2026 &middot; Data tersimpan realtime di Firebase</footer>
+</div>
+
+<!-- ============================== MODALS ============================== -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal-box" id="modalBox">
+    <div class="modal-icon" id="modalIcon">ℹ️</div>
+    <h3 id="modalTitle">Judul</h3>
+    <p id="modalMessage">Pesan</p>
+    <div id="modalExtra"></div>
+    <div class="modal-actions" id="modalActions"></div>
+  </div>
+</div>
+
+<div id="toastHost"></div>
+
+<script type="module">
+// ==========================================================================
+// IMPORT FIREBASE SDK (Modular CDN)
+// ==========================================================================
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+// !!! GANTI DENGAN FIREBASE CONFIG MILIKMU !!!
+const firebaseConfig = {
+  apiKey: "AIzaSyBzZqFz1RHRcLaotCaPK0NZn6utt6p9dHg",
+  authDomain: "kat-dresscode-26.firebaseapp.com",
+  databaseURL: "https://kat-dresscode-26-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "kat-dresscode-26",
+  storageBucket: "kat-dresscode-26.firebasestorage.app",
+  messagingSenderId: "787595044484",
+  appId: "1:787595044484:web:c68169081c07643b6b04d1",
+};
+
+// Inisialisasi Firebase
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+const dbRef = ref(db, 'absensi_data');
+const metaRef = ref(db, 'absensi_meta');
+
+// ==========================================================================
+// STATE & KONSTANTA LOCAL
+// ==========================================================================
+const TOTAL_KEY = 'kat_total_clan';
+const THEME_KEY = 'kat_theme_absensi';
+const RESET_TOKEN = 'macanTutulUhuyanjay';
+
+let globalData = []; // Data absensi dari Firebase (di memori)
+let editingClan = null;
+
+function getTotalClan() {
+  const v = parseInt(localStorage.getItem(TOTAL_KEY), 10);
+  return Number.isFinite(v) && v > 0 ? v : 48;
+}
+function setTotalClan(n) { localStorage.setItem(TOTAL_KEY, String(n)); }
+
+function findEntry(clanNumber) { return globalData.find(d => d.clan === clanNumber); }
+
+// ==========================================================================
+// SYNC REALTIME DENGAN FIREBASE
+// ==========================================================================
+onValue(dbRef, (snapshot) => {
+  const data = snapshot.val();
+  if (data) {
+    globalData = Object.keys(data).map(key => data[key]);
+  } else {
+    globalData = [];
+  }
+  renderTable();
+});
+
+onValue(metaRef, (snapshot) => {
+  const data = snapshot.val();
+  if (data) {
+    if (data.day !== undefined) document.getElementById('inputDay').value = data.day;
+    if (data.tanggal !== undefined) document.getElementById('inputTanggal').value = data.tanggal;
+  }
+});
+
+let metaDebounce = null;
+function saveMeta() {
+  clearTimeout(metaDebounce);
+  metaDebounce = setTimeout(() => {
+    set(metaRef, {
+      day: document.getElementById('inputDay').value,
+      tanggal: document.getElementById('inputTanggal').value
+    });
+  }, 400);
+}
+document.getElementById('inputDay').addEventListener('input', saveMeta);
+document.getElementById('inputTanggal').addEventListener('input', saveMeta);
+
+// ==========================================================================
+// RENDER UI
+// ==========================================================================
+function renderStats() {
+  const total = getTotalClan();
+  const reported = globalData.filter(d => d.reported).length;
+  const totalHadir = globalData.reduce((sum, d) => sum + (Number(d.hadir) || 0), 0);
+  const totalIzin = globalData.reduce((sum, d) => sum + (Number(d.izin) || 0), 0);
+  document.getElementById('statTotalClan').textContent = total;
+  document.getElementById('statHadir').textContent = totalHadir;
+  document.getElementById('statIzin').textContent = totalIzin;
+  document.getElementById('statPending').textContent = Math.max(total - reported, 0);
+}
+
+function renderTable() {
+  const total = getTotalClan();
+  const searchTerm = document.getElementById('searchInput').value.trim().toLowerCase();
+  const tbody = document.getElementById('tableBody');
+  tbody.innerHTML = '';
+
+  for (let i = 1; i <= total; i++) {
+    const entry = findEntry(i);
+    const hasReport = entry && entry.reported;
+
+    if (searchTerm) {
+      const matchClan = String(i).includes(searchTerm);
+      if (!matchClan) continue;
+    }
+
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><strong>${i}</strong></td>
+      <td>${hasReport ? `<span class="count-text count-hadir">${entry.hadir}</span>` : `<span class="empty-text">-</span>`}</td>
+      <td>${hasReport ? `<span class="count-text count-izin">${entry.izin}</span>` : `<span class="empty-text">-</span>`}</td>
+      <td>${hasReport ? `<span class="status-pill ok"><span class="dot"></span>Sudah</span>` : `<span class="status-pill no"><span class="dot"></span>Belum</span>`}</td>
+      <td>
+        <div class="row-actions">
+          <button class="btn btn-ghost btn-sm" id="edit-btn-${i}">✏️ Edit</button>
+          ${hasReport ? `<button class="btn btn-outline-danger btn-sm" id="del-btn-${i}">🗑️</button>` : ''}
+        </div>
+      </td>
+    `;
+    tbody.appendChild(tr);
+
+    document.getElementById(`edit-btn-${i}`).addEventListener('click', () => startEdit(i));
+    if (hasReport) {
+      document.getElementById(`del-btn-${i}`).addEventListener('click', () => confirmDelete(i));
+    }
+  }
+  renderStats();
+}
+
+// ==========================================================================
+// LOGIKA FORM & BUTTONS
+// ==========================================================================
+document.getElementById('absenForm').addEventListener('submit', function (e) {
+  e.preventDefault();
+  const clan = parseInt(document.getElementById('inputClan').value, 10);
+  const hadir = parseInt(document.getElementById('inputHadir').value, 10);
+  const izin = parseInt(document.getElementById('inputIzin').value, 10);
+
+  if (!Number.isFinite(clan) || clan < 1) {
+    showModal('warn', 'Nomor Clan Tidak Valid', 'Mohon isi nomor Clan dengan angka yang benar.');
+    return;
+  }
+  if (!Number.isFinite(hadir) || hadir < 0 || !Number.isFinite(izin) || izin < 0) {
+    showModal('warn', 'Jumlah Tidak Valid', 'Mohon isi jumlah hadir dan izin dengan angka yang benar (boleh 0).');
+    return;
+  }
+
+  set(ref(db, `absensi_data/clan_${clan}`), {
+    clan: clan,
+    hadir: hadir,
+    izin: izin,
+    reported: true,
+    timestamp: Date.now()
+  }).then(() => {
+    showToast(editingClan ? `Absensi Clan ${clan} diperbarui.` : `Absensi Clan ${clan} disimpan.`);
+    resetForm();
+  }).catch(() => {
+    showToast('Gagal menyimpan ke database.', true);
+  });
+});
+
+function resetForm() {
+  editingClan = null;
+  document.getElementById('absenForm').reset();
+  document.getElementById('formTitle').textContent = 'Isi / Ubah Absensi';
+  document.getElementById('submitBtn').textContent = '✅ Simpan Absensi';
+  document.getElementById('cancelEditBtn').style.display = 'none';
+  document.getElementById('inputClan').disabled = false;
+}
+document.getElementById('cancelEditBtn').addEventListener('click', resetForm);
+
+function startEdit(clan) {
+  const entry = findEntry(clan);
+  editingClan = clan;
+  document.getElementById('inputClan').value = clan;
+  document.getElementById('inputClan').disabled = true;
+  document.getElementById('inputHadir').value = entry ? entry.hadir : '';
+  document.getElementById('inputIzin').value = entry ? entry.izin : '';
+  document.getElementById('formTitle').textContent = `Ubah Absensi Clan ${clan}`;
+  document.getElementById('submitBtn').textContent = '💾 Update Absensi';
+  document.getElementById('cancelEditBtn').style.display = 'inline-flex';
+  document.getElementById('inputHadir').focus();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function confirmDelete(clan) {
+  showConfirm('Hapus Absensi?', `Absensi Clan ${clan} akan dihapus. Lanjutkan?`, () => {
+    set(ref(db, `absensi_data/clan_${clan}`), null).then(() => {
+      showToast(`Absensi Clan ${clan} dihapus.`, true);
+    });
+  });
+}
+
+document.getElementById('searchInput').addEventListener('input', renderTable);
+
+// Broadcast WA
+function buildWhatsappText() {
+  const total = getTotalClan();
+  const day = document.getElementById('inputDay').value.trim() || '[Isi di sini]';
+  const tanggal = document.getElementById('inputTanggal').value.trim() || '[Isi di sini]';
+  const totalHadir = globalData.reduce((sum, d) => sum + (Number(d.hadir) || 0), 0);
+  const totalIzin = globalData.reduce((sum, d) => sum + (Number(d.izin) || 0), 0);
+
+  let lines = [
+    'Halo semuanya, berikut ini adalah jumlah yang hadir pada :',
+    `Day : ${day}`,
+    `Hari, Tanggal : ${tanggal}`,
+    '',
+    `Total yang hadir : ${totalHadir}`,
+    `Total yang izin : ${totalIzin}`,
+    '',
+    'Rincian per clan :'
+  ];
+  for (let i = 1; i <= total; i++) {
+    const entry = findEntry(i);
+    const hadir = entry ? (entry.hadir ?? 0) : 0;
+    const izin = entry ? (entry.izin ?? 0) : 0;
+    lines.push(`Clan ${i} : hadir ${hadir}, izin ${izin}`);
+  }
+  return lines.join('\n');
+}
+
+document.getElementById('whatsappBtn').addEventListener('click', () => {
+  const text = buildWhatsappText();
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(text).then(() => showToast('Teks broadcast berhasil disalin!')).catch(() => showFallback(text));
+  } else { showFallback(text); }
+});
+function showFallback(text) {
+  showModal('info', 'Copy untuk Broadcast WhatsApp', 'Salin teks di bawah secara manual.', { withTextarea: true, textareaValue: text });
+}
+
+// Reset data
+document.getElementById('resetAllBtn').addEventListener('click', function () {
+  showModal('warn', 'Reset Semua Data', 'Masukkan token untuk melanjutkan.', { withInput: true, inputPlaceholder: 'Masukkan token...' }, (inputValue) => {
+    if (inputValue === RESET_TOKEN) {
+      set(dbRef, null).then(() => {
+        closeModal();
+        showToast('Semua data berhasil direset.', true);
+      });
+    } else { showModal('warn', 'Token Salah', 'Token tidak sesuai. Reset dibatalkan.'); }
+  });
+});
+
+// Settings
+document.getElementById('settingsBtn').addEventListener('click', function () {
+  showModal('info', 'Pengaturan Jumlah Clan', 'Atur berapa banyak Clan yang ditampilkan.', { withInput: true, inputType: 'number', inputPlaceholder: 'Contoh: 48', inputValue: getTotalClan() }, (inputValue) => {
+    const n = parseInt(inputValue, 10);
+    if (Number.isFinite(n) && n > 0) {
+      setTotalClan(n); renderTable(); closeModal(); showToast(`Jumlah Clan diatur menjadi ${n}.`);
+    } else { showModal('warn', 'Nilai Tidak Valid', 'Masukkan angka yang valid.'); }
+  });
+});
+
+// Theme
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  document.getElementById('darkModeBtn').textContent = theme === 'dark' ? '☀️' : '🌙';
+  localStorage.setItem(THEME_KEY, theme);
+}
+document.getElementById('darkModeBtn').addEventListener('click', function () {
+  applyTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+});
+
+// Generic Modals & Toasts
+window.showModal = function(type, title, message, options = {}, onSubmit = null) {
+  const overlay = document.getElementById('modalOverlay');
+  const box = document.getElementById('modalBox');
+  const icon = document.getElementById('modalIcon');
+  const iconMap = { warn: '⚠️', info: 'ℹ️', success: '✅' };
+  icon.className = 'modal-icon ' + type; icon.textContent = iconMap[type] || 'ℹ️';
+  document.getElementById('modalTitle').textContent = title;
+  document.getElementById('modalMessage').textContent = message;
+  box.classList.toggle('wide', !!options.withTextarea);
+  const extra = document.getElementById('modalExtra'); extra.innerHTML = '';
+  let inputEl = null;
+  if (options.withInput) {
+    inputEl = document.createElement('input'); inputEl.type = options.inputType || 'text';
+    inputEl.placeholder = options.inputPlaceholder || ''; if (options.inputValue !== undefined) inputEl.value = options.inputValue;
+    extra.appendChild(inputEl);
+  }
+  let textareaEl = null;
+  if (options.withTextarea) {
+    textareaEl = document.createElement('textarea'); textareaEl.readOnly = true; textareaEl.value = options.textareaValue || '';
+    extra.appendChild(textareaEl);
+  }
+  const actions = document.getElementById('modalActions'); actions.innerHTML = '';
+  const closeBtn = document.createElement('button'); closeBtn.className = 'btn btn-ghost btn-sm'; closeBtn.textContent = onSubmit ? 'Batal' : 'Tutup'; closeBtn.onclick = closeModal;
+  actions.appendChild(closeBtn);
+  if (textareaEl) {
+    const selectBtn = document.createElement('button'); selectBtn.className = 'btn btn-primary btn-sm'; selectBtn.textContent = '📋 Pilih Semua';
+    selectBtn.onclick = () => { textareaEl.focus(); textareaEl.select(); }; actions.appendChild(selectBtn);
+  }
+  if (onSubmit) {
+    const okBtn = document.createElement('button'); okBtn.className = 'btn btn-primary btn-sm'; okBtn.textContent = 'Lanjutkan';
+    okBtn.onclick = () => onSubmit(inputEl ? inputEl.value.trim() : null); actions.appendChild(okBtn);
+  }
+  overlay.classList.add('active');
+  if (inputEl) setTimeout(() => inputEl.focus(), 100);
+}
+window.showConfirm = function(title, message, onConfirm) { showModal('warn', title, message, {}, () => { onConfirm(); closeModal(); }); }
+window.closeModal = function() { document.getElementById('modalOverlay').classList.remove('active'); }
+document.getElementById('modalOverlay').addEventListener('click', function (e) { if (e.target === this) closeModal(); });
+document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeModal(); });
+
+window.showToast = function(message, isDanger = false) {
+  const host = document.getElementById('toastHost'); const toast = document.createElement('div');
+  toast.className = 'toast' + (isDanger ? ' err' : ''); toast.textContent = message; host.appendChild(toast);
+  setTimeout(() => { toast.style.opacity = '0'; toast.style.transition = 'opacity .3s ease'; setTimeout(() => toast.remove(), 300); }, 2800);
+}
+
+// Init: set default total clan 48 di localStorage jika belum ada
+if (!localStorage.getItem(TOTAL_KEY)) setTotalClan(48);
+// Init Theme saja, tabel di-render otomatis oleh onValue Firebase
+applyTheme(localStorage.getItem(THEME_KEY) || 'light');
+</script>
+</body>
+</html>
