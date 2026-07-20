@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Absensi Clan — KAT ITB 2026</title>
+<title>Dress Code Temple — KAT ITB 2026</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -12,23 +12,21 @@
    DESIGN TOKENS
    ========================================================================== */
 :root{
-  --blue:#1553A6;
-  --blue-dark:#0E3C7A;
-  --blue-light:#3B77CC;
-  --blue-tint:#E9F0FB;
-  --bg:#F5F7FA;
+  --red:#A31621;
+  --red-dark:#7A0F19;
+  --red-light:#C13B44;
+  --red-tint:#FBEAEA;
+  --bg:#F7F5F3;
   --card-bg:#FFFFFF;
-  --border:#E1E6ED;
-  --text:#101B24;
-  --text-muted:#6B7887;
+  --border:#E7E1DD;
+  --text:#241010;
+  --text-muted:#7A6E6B;
   --green:#1E8E5A;
   --green-tint:#E6F5EE;
-  --amber:#B8860B;
-  --amber-tint:#FBF3DF;
   --danger:#D64545;
   --danger-tint:#FDECEC;
-  --shadow:0 4px 24px rgba(21,83,166,.08);
-  --shadow-sm:0 2px 10px rgba(16,27,36,.06);
+  --shadow:0 4px 24px rgba(163,22,33,.08);
+  --shadow-sm:0 2px 10px rgba(36,16,16,.06);
   --radius-lg:20px;
   --radius-md:14px;
   --radius-sm:10px;
@@ -36,14 +34,13 @@
   --font-body:'Inter',system-ui,sans-serif;
 }
 [data-theme="dark"]{
-  --bg:#0F1720;
-  --card-bg:#17222E;
-  --border:#25333F;
-  --text:#EDF2F7;
-  --text-muted:#9AABBB;
-  --blue-tint:#122A47;
+  --bg:#171111;
+  --card-bg:#221919;
+  --border:#382828;
+  --text:#F5EDEA;
+  --text-muted:#B8A8A5;
+  --red-tint:#3A1418;
   --green-tint:#122A22;
-  --amber-tint:#3A2E10;
   --danger-tint:#3A1414;
   --shadow:0 4px 24px rgba(0,0,0,.35);
   --shadow-sm:0 2px 10px rgba(0,0,0,.25);
@@ -59,7 +56,7 @@ body{
   transition:background .3s ease, color .3s ease;
   padding-bottom:60px;
 }
-:focus-visible{outline:3px solid var(--blue-light); outline-offset:2px;}
+:focus-visible{outline:3px solid var(--red-light); outline-offset:2px;}
 @media (prefers-reduced-motion: reduce){
   *{animation-duration:.01ms !important; transition-duration:.01ms !important;}
 }
@@ -68,7 +65,7 @@ body{
    HEADER
    ========================================================================== */
 .topbar{
-  background:linear-gradient(120deg,var(--blue) 0%,var(--blue-dark) 100%);
+  background:linear-gradient(120deg,var(--red) 0%,var(--red-dark) 100%);
   color:#fff;
   padding:22px 24px;
   position:sticky; top:0; z-index:40;
@@ -83,8 +80,8 @@ body{
   width:44px; height:44px; border-radius:12px;
   background:#fff;
   display:flex; align-items:center; justify-content:center;
-  font-family:var(--font-display); font-weight:800; color:var(--blue);
-  font-size:16px;
+  font-family:var(--font-display); font-weight:800; color:var(--red);
+  font-size:18px;
   flex-shrink:0;
 }
 .brand-text h1{font-family:var(--font-display); font-size:18px; font-weight:700; line-height:1.2;}
@@ -120,7 +117,7 @@ body{
    STATS
    ========================================================================== */
 .stats-grid{
-  display:grid; grid-template-columns:repeat(4,1fr); gap:14px;
+  display:grid; grid-template-columns:repeat(3,1fr); gap:14px;
 }
 .stat-card{
   background:var(--card-bg);
@@ -132,19 +129,18 @@ body{
 }
 .stat-card::before{
   content:''; position:absolute; left:0; top:0; bottom:0; width:4px;
-  background:var(--accent, var(--blue));
+  background:var(--accent, var(--red));
 }
-.stat-card .num{font-family:var(--font-display); font-size:26px; font-weight:800;}
-.stat-card .label{font-size:12px; color:var(--text-muted); margin-top:2px; font-weight:600;}
-.stat-card.total{--accent:var(--blue);}
-.stat-card.hadir{--accent:var(--green);}
-.stat-card.izin{--accent:var(--amber);}
+.stat-card .num{font-family:var(--font-display); font-size:28px; font-weight:800;}
+.stat-card .label{font-size:12.5px; color:var(--text-muted); margin-top:2px; font-weight:600;}
+.stat-card.total{--accent:var(--red);}
+.stat-card.done{--accent:var(--green);}
 .stat-card.pending{--accent:var(--danger);}
 
 /* ==========================================================================
    FORM
    ========================================================================== */
-.form-grid{display:grid; grid-template-columns:110px 1fr 1fr; gap:14px; align-items:end;}
+.form-grid{display:grid; grid-template-columns:140px 1fr; gap:14px; align-items:end;}
 .field{display:flex; flex-direction:column; gap:6px;}
 .field label{font-size:12.5px; font-weight:600; color:var(--text-muted);}
 .field input, .field select{
@@ -158,8 +154,8 @@ body{
   transition:border-color .2s ease, box-shadow .2s ease;
 }
 .field input:focus, .field select:focus{
-  border-color:var(--blue-light);
-  box-shadow:0 0 0 3px var(--blue-tint);
+  border-color:var(--red-light);
+  box-shadow:0 0 0 3px var(--red-tint);
   outline:none;
 }
 .form-actions{grid-column:1 / -1; display:flex; gap:10px; margin-top:4px; flex-wrap:wrap;}
@@ -170,10 +166,10 @@ body{
   display:inline-flex; align-items:center; gap:6px;
 }
 .btn:active{transform:scale(.97);}
-.btn-primary{background:var(--blue); color:#fff; box-shadow:0 4px 14px rgba(21,83,166,.3);}
-.btn-primary:hover{background:var(--blue-dark);}
+.btn-primary{background:var(--red); color:#fff; box-shadow:0 4px 14px rgba(163,22,33,.3);}
+.btn-primary:hover{background:var(--red-dark);}
 .btn-ghost{background:transparent; color:var(--text); border:1.5px solid var(--border);}
-.btn-ghost:hover{border-color:var(--blue-light); color:var(--blue);}
+.btn-ghost:hover{border-color:var(--red-light); color:var(--red);}
 .btn-sm{padding:7px 12px; font-size:12.5px; border-radius:8px;}
 .btn-danger{background:var(--danger); color:#fff;}
 .btn-danger:hover{background:#b83636;}
@@ -198,15 +194,10 @@ body{
 .toolbar-buttons{display:flex; gap:8px; flex-wrap:wrap;}
 
 /* ==========================================================================
-   BROADCAST META FIELDS
-   ========================================================================== */
-.meta-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
-
-/* ==========================================================================
    TABLE
    ========================================================================== */
 .table-wrap{overflow-x:auto; border-radius:var(--radius-md); border:1px solid var(--border);}
-table{width:100%; border-collapse:collapse; min-width:640px;}
+table{width:100%; border-collapse:collapse; min-width:560px;}
 thead th{
   text-align:left; font-size:12px; text-transform:uppercase; letter-spacing:.04em;
   color:var(--text-muted); font-weight:700; padding:12px 16px;
@@ -215,7 +206,7 @@ thead th{
 tbody td{padding:13px 16px; font-size:14px; border-bottom:1px solid var(--border);}
 tbody tr:last-child td{border-bottom:none;}
 tbody tr{transition:background .15s ease;}
-tbody tr:hover{background:var(--blue-tint);}
+tbody tr:hover{background:var(--red-tint);}
 .status-pill{
   display:inline-flex; align-items:center; gap:6px; padding:4px 10px; border-radius:999px;
   font-size:12.5px; font-weight:700;
@@ -224,16 +215,14 @@ tbody tr:hover{background:var(--blue-tint);}
 .status-pill.no{background:var(--danger-tint); color:var(--danger);}
 .dot{width:8px; height:8px; border-radius:50%; background:currentColor; flex-shrink:0;}
 .row-actions{display:flex; gap:6px;}
-.count-text{font-weight:600;}
-.count-hadir{color:var(--green);}
-.count-izin{color:var(--amber);}
+.dresscode-text{font-weight:600;}
 .empty-text{color:var(--text-muted); font-style:italic;}
 
 /* ==========================================================================
    MODAL
    ========================================================================== */
 .modal-overlay{
-  position:fixed; inset:0; background:rgba(10,16,24,.5);
+  position:fixed; inset:0; background:rgba(20,10,10,.5);
   display:flex; align-items:center; justify-content:center; z-index:100;
   padding:20px; opacity:0; pointer-events:none; transition:opacity .2s ease;
 }
@@ -251,7 +240,7 @@ tbody tr:hover{background:var(--blue-tint);}
   font-size:22px; margin-bottom:14px;
 }
 .modal-icon.warn{background:var(--danger-tint); color:var(--danger);}
-.modal-icon.info{background:var(--blue-tint); color:var(--blue);}
+.modal-icon.info{background:var(--red-tint); color:var(--red);}
 .modal-icon.success{background:var(--green-tint); color:var(--green);}
 .modal-box h3{font-family:var(--font-display); font-size:17px; margin-bottom:8px;}
 .modal-box p{font-size:14px; color:var(--text-muted); line-height:1.55; margin-bottom:18px;}
@@ -262,7 +251,7 @@ tbody tr:hover{background:var(--blue-tint);}
 .modal-box textarea{
   width:100%; padding:12px 13px; border-radius:var(--radius-sm); border:1.5px solid var(--border);
   background:var(--bg); color:var(--text); font-size:13.5px; margin-bottom:16px; font-family:var(--font-body);
-  resize:vertical; min-height:260px; line-height:1.6;
+  resize:vertical; min-height:220px; line-height:1.6;
 }
 .modal-actions{display:flex; gap:10px; justify-content:flex-end;}
 
@@ -279,21 +268,8 @@ tbody tr:hover{background:var(--blue-tint);}
 footer{text-align:center; padding:30px 20px 10px; font-size:12.5px; color:var(--text-muted);}
 
 @media (max-width:600px){
-  /* Buat form menjadi 1 kolom vertical di HP */
-  .form-grid{
-    grid-template-columns: 1fr;
-  }
-  
-  /* Pastikan input tidak meluap keluar layar */
-  .field {
-    min-width: 0;
-  }
-  .field input, .field select {
-    width: 100%;
-  }
-
-  .meta-grid{grid-template-columns:1fr;}
-  .stats-grid{grid-template-columns:1fr 1fr;}
+  .form-grid{grid-template-columns:1fr;}
+  .stats-grid{grid-template-columns:1fr; }
   .brand-text p{display:none;}
 }
 </style>
@@ -306,12 +282,12 @@ footer{text-align:center; padding:30px 20px 10px; font-size:12.5px; color:var(--
     <div class="brand">
       <div class="brand-mark">KAT</div>
       <div class="brand-text">
-        <h1>Absensi Clan</h1>
-        <p>KAT ITB 2026 &middot; rekap hadir &amp; izin per clan</p>
+        <h1>Dress Code Temple</h1>
+        <p>KAT ITB 2026 &middot; anti tabrakan dress code</p>
       </div>
     </div>
     <div class="topbar-actions">
-      <button class="icon-btn" id="settingsBtn" title="Pengaturan jumlah Clan">⚙️</button>
+      <button class="icon-btn" id="settingsBtn" title="Pengaturan jumlah Temple">⚙️</button>
       <button class="icon-btn" id="darkModeBtn" title="Ganti tema">🌙</button>
     </div>
   </div>
@@ -322,63 +298,39 @@ footer{text-align:center; padding:30px 20px 10px; font-size:12.5px; color:var(--
   <!-- ============================== STATS ============================== -->
   <div class="stats-grid" id="statsGrid">
     <div class="stat-card total">
-      <div class="num" id="statTotalClan">0</div>
-      <div class="label">Total Clan</div>
+      <div class="num" id="statTotal">0</div>
+      <div class="label">Total Temple</div>
     </div>
-    <div class="stat-card hadir">
-      <div class="num" id="statHadir">0</div>
-      <div class="label">Total Hadir</div>
-    </div>
-    <div class="stat-card izin">
-      <div class="num" id="statIzin">0</div>
-      <div class="label">Total Izin</div>
+    <div class="stat-card done">
+      <div class="num" id="statDone">0</div>
+      <div class="label">Sudah Memilih</div>
     </div>
     <div class="stat-card pending">
       <div class="num" id="statPending">0</div>
-      <div class="label">Belum Lapor</div>
+      <div class="label">Belum Memilih</div>
     </div>
   </div>
 
   <!-- ============================== FORM ============================== -->
   <div class="card section-gap">
-    <h2 id="formTitle">Isi / Ubah Absensi</h2>
-    <p class="subtitle">Setiap PJ Clan mengisi jumlah yang hadir dan izin untuk clan-nya.</p>
-    <form id="absenForm">
+    <h2 id="formTitle">Isi / Ubah Dress Code</h2>
+    <p class="subtitle">Dress code akan otomatis dicek supaya tidak sama dengan Temple lain.</p>
+    <form id="dressForm">
       <div class="form-grid">
         <div class="field">
-          <label for="inputClan">Nomor Clan</label>
-          <input type="number" id="inputClan" min="1" placeholder="7" required>
+          <label for="inputTemple">Nomor Temple</label>
+          <input type="number" id="inputTemple" min="1" placeholder="7" required>
         </div>
         <div class="field">
-          <label for="inputHadir">Jumlah Hadir</label>
-          <input type="number" id="inputHadir" min="0" placeholder="0" required>
-        </div>
-        <div class="field">
-          <label for="inputIzin">Jumlah Izin</label>
-          <input type="number" id="inputIzin" min="0" placeholder="0" required>
+          <label for="inputDress">Dress Code</label>
+          <input type="text" id="inputDress" placeholder="Contoh: Flanel Hitam" required>
         </div>
         <div class="form-actions">
-          <button type="submit" class="btn btn-primary" id="submitBtn">✅ Simpan Absensi</button>
+          <button type="submit" class="btn btn-primary" id="submitBtn">✅ Simpan Dress Code</button>
           <button type="button" class="btn btn-ghost" id="cancelEditBtn" style="display:none;">Batal Edit</button>
         </div>
       </div>
     </form>
-  </div>
-
-  <!-- ============================== META BROADCAST ============================== -->
-  <div class="card section-gap">
-    <h2>Info Broadcast</h2>
-    <p class="subtitle">Isi Day dan Hari, Tanggal untuk dimasukkan ke teks broadcast.</p>
-    <div class="meta-grid">
-      <div class="field">
-        <label for="inputDay">Day</label>
-        <input type="text" id="inputDay" placeholder="Contoh: Day 3">
-      </div>
-      <div class="field">
-        <label for="inputTanggal">Hari, Tanggal</label>
-        <input type="text" id="inputTanggal" placeholder="Contoh: Rabu, 15 Juli 2026">
-      </div>
-    </div>
   </div>
 
   <!-- ============================== TOOLBAR ============================== -->
@@ -386,7 +338,7 @@ footer{text-align:center; padding:30px 20px 10px; font-size:12.5px; color:var(--
     <div class="toolbar">
       <div class="search-box">
         <span>🔍</span>
-        <input type="text" id="searchInput" placeholder="Cari nomor Clan...">
+        <input type="text" id="searchInput" placeholder="Cari nomor Temple atau dress code...">
       </div>
       <div class="toolbar-buttons">
         <button class="btn btn-whatsapp btn-sm" id="whatsappBtn">💬 Copy untuk Broadcast WhatsApp</button>
@@ -397,15 +349,14 @@ footer{text-align:center; padding:30px 20px 10px; font-size:12.5px; color:var(--
 
   <!-- ============================== TABLE ============================== -->
   <div class="card section-gap">
-    <h2>Preview Semua Clan</h2>
-    <p class="subtitle">Hijau = sudah lapor &middot; Merah = belum lapor</p>
+    <h2>Preview Semua Temple</h2>
+    <p class="subtitle">Hijau = sudah memilih dress code &middot; Merah = belum memilih</p>
     <div class="table-wrap">
       <table>
         <thead>
           <tr>
-            <th>Clan</th>
-            <th>Hadir</th>
-            <th>Izin</th>
+            <th>Temple</th>
+            <th>Dress Code</th>
             <th>Status</th>
             <th>Aksi</th>
           </tr>
@@ -415,7 +366,7 @@ footer{text-align:center; padding:30px 20px 10px; font-size:12.5px; color:var(--
     </div>
   </div>
 
-  <footer>Dibuat untuk PJ Clan KAT ITB 2026 &middot; Data tersimpan realtime di Firebase</footer>
+  <footer>Dibuat untuk Calon Mentor KAT ITB 2026 &middot; Data tersimpan lokal di browser ini (localStorage)</footer>
 </div>
 
 <!-- ============================== MODALS ============================== -->
@@ -436,9 +387,9 @@ footer{text-align:center; padding:30px 20px 10px; font-size:12.5px; color:var(--
 // IMPORT FIREBASE SDK (Modular CDN)
 // ==========================================================================
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+import { getDatabase, ref, set, onValue, get, child } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-// !!! GANTI DENGAN FIREBASE CONFIG MILIKMU !!!
+// !!! GANTI DENGAN FIREBASE CONFIG MILIKMU DARI LANGKAH 1 !!!
 const firebaseConfig = {
   apiKey: "AIzaSyBzZqFz1RHRcLaotCaPK0NZn6utt6p9dHg",
   authDomain: "kat-dresscode-26.firebaseapp.com",
@@ -452,173 +403,191 @@ const firebaseConfig = {
 // Inisialisasi Firebase
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
-const dbRef = ref(db, 'absensi_data');
-const metaRef = ref(db, 'absensi_meta');
+const dbRef = ref(db, 'dresscode_data');
 
 // ==========================================================================
 // STATE & KONSTANTA LOCAL
 // ==========================================================================
-const TOTAL_KEY = 'kat_total_clan';
-const THEME_KEY = 'kat_theme_absensi';
+const TOTAL_KEY = 'kat_total_temple';
+const THEME_KEY = 'kat_theme';
 const RESET_TOKEN = 'macanTutulUhuyanjay';
 
-let globalData = []; // Data absensi dari Firebase (di memori)
-let editingClan = null;
+let globalData = []; // Menyimpan data dari Firebase secara lokal di memori jalannya aplikasi
+let editingTemple = null;
 
-function getTotalClan() {
-  const v = parseInt(localStorage.getItem(TOTAL_KEY), 10);
-  return Number.isFinite(v) && v > 0 ? v : 48;
+const STOPWORDS = new Set([
+  'baju','kaos','kemeja','hem','warna','pakaian',
+  'atasan','bawahan','pakai','memakai','celana','model','jenis','dress','code'
+]);
+
+const SYNONYMS = {
+  'flannel':'flanel', 'grey':'abu', 'gray':'abu', 'abuabu':'abu', 'shirt':'kemeja',
+  'white':'putih', 'black':'hitam', 'blue':'biru', 'navy':'navy', 'dongker':'navy',
+  'red':'merah', 'green':'hijau', 'yellow':'kuning', 'brown':'coklat', 'cokelat':'coklat',
+  'jeans':'denim', 'sneakers':'sepatu', 'sneaker':'sepatu'
+};
+
+function normalizeDressCode(text) {
+  if (!text) return '';
+  let s = text.toLowerCase().replace(/[^a-z0-9\s]/g, ' ');
+  let tokens = s.split(/\s+/).filter(Boolean).map(tok => SYNONYMS[tok] || tok).filter(tok => !STOPWORDS.has(tok));
+  const uniqueTokens = Array.from(new Set(tokens)).sort();
+  return uniqueTokens.join(' ');
 }
-function setTotalClan(n) { localStorage.setItem(TOTAL_KEY, String(n)); }
 
-function findEntry(clanNumber) { return globalData.find(d => d.clan === clanNumber); }
+function getTotalTemple() {
+  const v = parseInt(localStorage.getItem(TOTAL_KEY), 10);
+  return Number.isFinite(v) && v > 0 ? v : 16;
+}
+function setTotalTemple(n) { localStorage.setItem(TOTAL_KEY, String(n)); }
+
+function findEntry(templeNumber) { return globalData.find(d => d.temple === templeNumber); }
+function findConflict(normalized, excludeTemple) {
+  if (!normalized) return null;
+  return globalData.find(d => d.normalized === normalized && d.temple !== excludeTemple);
+}
 
 // ==========================================================================
 // SYNC REALTIME DENGAN FIREBASE
 // ==========================================================================
+// Fungsi ini otomatis berjalan setiap kali ada perubahan data di Firebase (oleh HP manapun)
 onValue(dbRef, (snapshot) => {
   const data = snapshot.val();
   if (data) {
+    // Firebase mengembalikan object atau array, kita normalisasi menjadi array standar
     globalData = Object.keys(data).map(key => data[key]);
   } else {
     globalData = [];
   }
-  renderTable();
+  renderTable(); // Update tabel secara otomatis di layar
 });
-
-onValue(metaRef, (snapshot) => {
-  const data = snapshot.val();
-  if (data) {
-    if (data.day !== undefined) document.getElementById('inputDay').value = data.day;
-    if (data.tanggal !== undefined) document.getElementById('inputTanggal').value = data.tanggal;
-  }
-});
-
-let metaDebounce = null;
-function saveMeta() {
-  clearTimeout(metaDebounce);
-  metaDebounce = setTimeout(() => {
-    set(metaRef, {
-      day: document.getElementById('inputDay').value,
-      tanggal: document.getElementById('inputTanggal').value
-    });
-  }, 400);
-}
-document.getElementById('inputDay').addEventListener('input', saveMeta);
-document.getElementById('inputTanggal').addEventListener('input', saveMeta);
 
 // ==========================================================================
 // RENDER UI
 // ==========================================================================
 function renderStats() {
-  const total = getTotalClan();
-  const reported = globalData.filter(d => d.reported).length;
-  const totalHadir = globalData.reduce((sum, d) => sum + (Number(d.hadir) || 0), 0);
-  const totalIzin = globalData.reduce((sum, d) => sum + (Number(d.izin) || 0), 0);
-  document.getElementById('statTotalClan').textContent = total;
-  document.getElementById('statHadir').textContent = totalHadir;
-  document.getElementById('statIzin').textContent = totalIzin;
-  document.getElementById('statPending').textContent = Math.max(total - reported, 0);
+  const total = getTotalTemple();
+  const done = globalData.filter(d => d.dresscode && d.dresscode.trim() !== '').length;
+  document.getElementById('statTotal').textContent = total;
+  document.getElementById('statDone').textContent = done;
+  document.getElementById('statPending').textContent = Math.max(total - done, 0);
 }
 
 function renderTable() {
-  const total = getTotalClan();
+  const total = getTotalTemple();
   const searchTerm = document.getElementById('searchInput').value.trim().toLowerCase();
   const tbody = document.getElementById('tableBody');
   tbody.innerHTML = '';
 
   for (let i = 1; i <= total; i++) {
     const entry = findEntry(i);
-    const hasReport = entry && entry.reported;
+    const hasDress = entry && entry.dresscode && entry.dresscode.trim() !== '';
 
     if (searchTerm) {
-      const matchClan = String(i).includes(searchTerm);
-      if (!matchClan) continue;
+      const matchTemple = String(i).includes(searchTerm);
+      const matchDress = hasDress && entry.dresscode.toLowerCase().includes(searchTerm);
+      if (!matchTemple && !matchDress) continue;
     }
 
     const tr = document.createElement('tr');
     tr.innerHTML = `
       <td><strong>${i}</strong></td>
-      <td>${hasReport ? `<span class="count-text count-hadir">${entry.hadir}</span>` : `<span class="empty-text">-</span>`}</td>
-      <td>${hasReport ? `<span class="count-text count-izin">${entry.izin}</span>` : `<span class="empty-text">-</span>`}</td>
-      <td>${hasReport ? `<span class="status-pill ok"><span class="dot"></span>Sudah</span>` : `<span class="status-pill no"><span class="dot"></span>Belum</span>`}</td>
+      <td>${hasDress ? `<span class="dresscode-text">${escapeHtml(entry.dresscode)}</span>` : `<span class="empty-text">Belum memilih</span>`}</td>
+      <td>${hasDress ? `<span class="status-pill ok"><span class="dot"></span>Sudah</span>` : `<span class="status-pill no"><span class="dot"></span>Belum</span>`}</td>
       <td>
         <div class="row-actions">
           <button class="btn btn-ghost btn-sm" id="edit-btn-${i}">✏️ Edit</button>
-          ${hasReport ? `<button class="btn btn-outline-danger btn-sm" id="del-btn-${i}">🗑️</button>` : ''}
+          ${hasDress ? `<button class="btn btn-outline-danger btn-sm" id="del-btn-${i}">🗑️</button>` : ''}
         </div>
       </td>
     `;
     tbody.appendChild(tr);
 
+    // Pasang event listener secara dinamis
     document.getElementById(`edit-btn-${i}`).addEventListener('click', () => startEdit(i));
-    if (hasReport) {
+    if (hasDress) {
       document.getElementById(`del-btn-${i}`).addEventListener('click', () => confirmDelete(i));
     }
   }
   renderStats();
 }
 
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
 // ==========================================================================
 // LOGIKA FORM & BUTTONS
 // ==========================================================================
-document.getElementById('absenForm').addEventListener('submit', function (e) {
+document.getElementById('dressForm').addEventListener('submit', function (e) {
   e.preventDefault();
-  const clan = parseInt(document.getElementById('inputClan').value, 10);
-  const hadir = parseInt(document.getElementById('inputHadir').value, 10);
-  const izin = parseInt(document.getElementById('inputIzin').value, 10);
+  const temple = parseInt(document.getElementById('inputTemple').value, 10);
+  const dresscode = document.getElementById('inputDress').value.trim();
 
-  if (!Number.isFinite(clan) || clan < 1) {
-    showModal('warn', 'Nomor Clan Tidak Valid', 'Mohon isi nomor Clan dengan angka yang benar.');
+  if (!Number.isFinite(temple) || temple < 1) {
+    showModal('warn', 'Nomor Temple Tidak Valid', 'Mohon isi nomor Temple dengan angka yang benar.');
     return;
   }
-  if (!Number.isFinite(hadir) || hadir < 0 || !Number.isFinite(izin) || izin < 0) {
-    showModal('warn', 'Jumlah Tidak Valid', 'Mohon isi jumlah hadir dan izin dengan angka yang benar (boleh 0).');
+  if (!dresscode) {
+     showModal('warn', 'Dress Code Kosong', 'Mohon isi dress code terlebih dahulu.');
+     return;
+  }
+
+  const normalized = normalizeDressCode(dresscode);
+  if (!normalized) {
+    showModal('warn', 'Dress Code Kurang Spesifik', 'Coba tulis lebih spesifik, misalnya "Flanel Hitam".');
     return;
   }
 
-  set(ref(db, `absensi_data/clan_${clan}`), {
-    clan: clan,
-    hadir: hadir,
-    izin: izin,
-    reported: true,
+  const conflict = findConflict(normalized, temple);
+  if (conflict) {
+    showModal('warn', 'Dress Code Sudah Digunakan', `Dress code tersebut sudah digunakan oleh Temple ${conflict.temple}.`);
+    return;
+  }
+
+  // Simpan data langsung ke lokasi Firebase `dresscode_data/temple_X`
+  set(ref(db, `dresscode_data/temple_${temple}`), {
+    temple: temple,
+    dresscode: dresscode,
+    normalized: normalized,
     timestamp: Date.now()
   }).then(() => {
-    showToast(editingClan ? `Absensi Clan ${clan} diperbarui.` : `Absensi Clan ${clan} disimpan.`);
+    showToast(editingTemple ? `Dress code Temple ${temple} diperbarui.` : `Dress code Temple ${temple} disimpan.`);
     resetForm();
-  }).catch(() => {
+  }).catch((err) => {
     showToast('Gagal menyimpan ke database.', true);
   });
 });
 
 function resetForm() {
-  editingClan = null;
-  document.getElementById('absenForm').reset();
-  document.getElementById('formTitle').textContent = 'Isi / Ubah Absensi';
-  document.getElementById('submitBtn').textContent = '✅ Simpan Absensi';
+  editingTemple = null;
+  document.getElementById('dressForm').reset();
+  document.getElementById('formTitle').textContent = 'Isi / Ubah Dress Code';
+  document.getElementById('submitBtn').textContent = '✅ Simpan Dress Code';
   document.getElementById('cancelEditBtn').style.display = 'none';
-  document.getElementById('inputClan').disabled = false;
+  document.getElementById('inputTemple').disabled = false;
 }
 document.getElementById('cancelEditBtn').addEventListener('click', resetForm);
 
-function startEdit(clan) {
-  const entry = findEntry(clan);
-  editingClan = clan;
-  document.getElementById('inputClan').value = clan;
-  document.getElementById('inputClan').disabled = true;
-  document.getElementById('inputHadir').value = entry ? entry.hadir : '';
-  document.getElementById('inputIzin').value = entry ? entry.izin : '';
-  document.getElementById('formTitle').textContent = `Ubah Absensi Clan ${clan}`;
-  document.getElementById('submitBtn').textContent = '💾 Update Absensi';
+function startEdit(temple) {
+  const entry = findEntry(temple);
+  editingTemple = temple;
+  document.getElementById('inputTemple').value = temple;
+  document.getElementById('inputTemple').disabled = true;
+  document.getElementById('inputDress').value = entry ? entry.dresscode : '';
+  document.getElementById('formTitle').textContent = `Ubah Dress Code Temple ${temple}`;
+  document.getElementById('submitBtn').textContent = '💾 Update Dress Code';
   document.getElementById('cancelEditBtn').style.display = 'inline-flex';
-  document.getElementById('inputHadir').focus();
+  document.getElementById('inputDress').focus();
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-function confirmDelete(clan) {
-  showConfirm('Hapus Absensi?', `Absensi Clan ${clan} akan dihapus. Lanjutkan?`, () => {
-    set(ref(db, `absensi_data/clan_${clan}`), null).then(() => {
-      showToast(`Absensi Clan ${clan} dihapus.`, true);
+function confirmDelete(temple) {
+  showConfirm('Hapus Dress Code?', `Dress code Temple ${temple} akan dihapus. Lanjutkan?`, () => {
+    set(ref(db, `dresscode_data/temple_${temple}`), null).then(() => {
+      showToast(`Dress code Temple ${temple} dihapus.`, true);
     });
   });
 }
@@ -627,27 +596,12 @@ document.getElementById('searchInput').addEventListener('input', renderTable);
 
 // Broadcast WA
 function buildWhatsappText() {
-  const total = getTotalClan();
-  const day = document.getElementById('inputDay').value.trim() || '[Isi di sini]';
-  const tanggal = document.getElementById('inputTanggal').value.trim() || '[Isi di sini]';
-  const totalHadir = globalData.reduce((sum, d) => sum + (Number(d.hadir) || 0), 0);
-  const totalIzin = globalData.reduce((sum, d) => sum + (Number(d.izin) || 0), 0);
-
-  let lines = [
-    'Halo semuanya, berikut ini adalah jumlah yang hadir pada :',
-    `Day : ${day}`,
-    `Hari, Tanggal : ${tanggal}`,
-    '',
-    `Total yang hadir : ${totalHadir}`,
-    `Total yang izin : ${totalIzin}`,
-    '',
-    'Rincian per clan :'
-  ];
+  const total = getTotalTemple();
+  let lines = ['Halo semuanya! 👋✨', '', 'Biar kompak dan nggak salah kostum, yuk catat Dresscode setiap Temple kita untuk:', '📅 Day: [Isi di sini]', '🗓️ Hari: [Isi di sini]', '📆 Tanggal: [Isi di sini]', '', 'Berikut adalah daftarnya:', ''];
   for (let i = 1; i <= total; i++) {
     const entry = findEntry(i);
-    const hadir = entry ? (entry.hadir ?? 0) : 0;
-    const izin = entry ? (entry.izin ?? 0) : 0;
-    lines.push(`Clan ${i} : hadir ${hadir}, izin ${izin}`);
+    const hasDress = entry && entry.dresscode && entry.dresscode.trim() !== '';
+    lines.push(`Temple ${i}: ${hasDress ? entry.dresscode : '-'}`);
   }
   return lines.join('\n');
 }
@@ -676,10 +630,10 @@ document.getElementById('resetAllBtn').addEventListener('click', function () {
 
 // Settings
 document.getElementById('settingsBtn').addEventListener('click', function () {
-  showModal('info', 'Pengaturan Jumlah Clan', 'Atur berapa banyak Clan yang ditampilkan.', { withInput: true, inputType: 'number', inputPlaceholder: 'Contoh: 48', inputValue: getTotalClan() }, (inputValue) => {
+  showModal('info', 'Pengaturan Jumlah Temple', 'Atur berapa banyak Temple yang ditampilkan.', { withInput: true, inputType: 'number', inputPlaceholder: 'Contoh: 30', inputValue: getTotalTemple() }, (inputValue) => {
     const n = parseInt(inputValue, 10);
     if (Number.isFinite(n) && n > 0) {
-      setTotalClan(n); renderTable(); closeModal(); showToast(`Jumlah Clan diatur menjadi ${n}.`);
+      setTotalTemple(n); renderTable(); closeModal(); showToast(`Jumlah Temple diatur menjadi ${n}.`);
     } else { showModal('warn', 'Nilai Tidak Valid', 'Masukkan angka yang valid.'); }
   });
 });
@@ -741,8 +695,6 @@ window.showToast = function(message, isDanger = false) {
   setTimeout(() => { toast.style.opacity = '0'; toast.style.transition = 'opacity .3s ease'; setTimeout(() => toast.remove(), 300); }, 2800);
 }
 
-// Init: set default total clan 48 di localStorage jika belum ada
-if (!localStorage.getItem(TOTAL_KEY)) setTotalClan(48);
 // Init Theme saja, tabel di-render otomatis oleh onValue Firebase
 applyTheme(localStorage.getItem(THEME_KEY) || 'light');
 </script>
