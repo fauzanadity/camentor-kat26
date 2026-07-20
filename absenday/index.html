@@ -279,8 +279,19 @@ tbody tr:hover{background:var(--blue-tint);}
 footer{text-align:center; padding:30px 20px 10px; font-size:12.5px; color:var(--text-muted);}
 
 @media (max-width:600px){
-  .form-grid{grid-template-columns:1fr 1fr;}
-  .form-grid .field:first-child{grid-column:1 / -1;}
+  /* Buat form menjadi 1 kolom vertical di HP */
+  .form-grid{
+    grid-template-columns: 1fr;
+  }
+  
+  /* Pastikan input tidak meluap keluar layar */
+  .field {
+    min-width: 0;
+  }
+  .field input, .field select {
+    width: 100%;
+  }
+
   .meta-grid{grid-template-columns:1fr;}
   .stats-grid{grid-template-columns:1fr 1fr;}
   .brand-text p{display:none;}
